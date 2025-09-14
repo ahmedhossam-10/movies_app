@@ -1,9 +1,23 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:movies_app/core/PrefsManager.dart';
+import 'package:movies_app/ui/home/screen/home_screen.dart';
+import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 import 'package:movies_app/ui/splash/screen/splash_screen.dart';
-import 'package:movies_app/ui/start/screen/start_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await EasyLocalization.ensureInitialized();
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('ar')],
+      fallbackLocale: Locale('en'),
+      path: 'assets/translations',
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,6 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -22,7 +39,7 @@ class MyApp extends StatelessWidget {
         // try changing the seedColor in the colorScheme below to Colors.green
         // and then invoke "hot reload" (save your changes or press the "hot
         // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
+        // the command line to signUp the app).
         //
         // Notice that the counter didn't reset back to zero; the application
         // state is not lost during the reload. To reset the state, use hot
@@ -35,8 +52,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: SplashScreen.routeName,
       routes: {
-        SplashScreen.routeName:(_)=>SplashScreen(),
-        StartScreen.routeName:(_)=>StartScreen(),
+        SplashScreen.routeName: (_) => SplashScreen(),
+        SignUpScreen.routeName: (_) => SignUpScreen(),
+        HomeScreen.routeName: (_) => HomeScreen(),
       },
     );
   }
