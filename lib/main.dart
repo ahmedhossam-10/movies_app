@@ -4,11 +4,16 @@ import 'package:movies_app/core/PrefsManager.dart';
 import 'package:movies_app/ui/home/screen/home_screen.dart';
 import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 import 'package:movies_app/ui/splash/screen/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(
     EasyLocalization(
