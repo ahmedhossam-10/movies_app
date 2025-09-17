@@ -23,6 +23,6 @@ abstract final class AssetsManager {
   static const String sort_selected = "assets/svg/sort selected.svg";
   static const String sort_unselected = "assets/svg/sort unselected.svg";
   static const String profile_selected = "assets/svg/profile selected.svg";
-  static const String profile_unselected = "assets/svg/sort unselected.svg";
+  static const String profile_unselected = "assets/svg/assets/svg/profile unselected.svg";
 
 }
