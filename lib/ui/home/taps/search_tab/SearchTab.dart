@@ -1,10 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/core/resources/AssetsManager.dart';
+import 'package:movies_app/core/reusable_components/SearchField.dart';
+import 'package:movies_app/core/resources/ColorManager.dart';
 
-class SearchTab extends StatelessWidget {
+import '../../../../core/remote/network/ApiManager.dart';
+
+class SearchTab extends StatefulWidget {
   const SearchTab({super.key});
 
   @override
+  State<SearchTab> createState() => _SearchTabState();
+}
+
+class _SearchTabState extends State<SearchTab> {
+  final TextEditingController controller = TextEditingController();
+  List movies = [];
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> searchMovies(String query) async {
+    if (query.isEmpty) {
+      setState(() => movies = []);
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      final result = await ApiManager.searchMovies(query);
+      setState(() {
+        movies = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      debugPrint("Error: $e");
+      setState(() => isLoading = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.green,);
+    return Scaffold(
+      backgroundColor: ColorManager.primaryColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SearchField(
+                controller: controller,
+                onChanged: (value) => searchMovies(value),
+              ),
+            ),
+            if (isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (movies.isEmpty)
+              Expanded(child: Image.asset(AssetsManager.empty))
+            else
+              Expanded(
+                child: ListView.builder(
+                  itemCount: movies.length,
+                  itemBuilder: (context, index) {
+                    final movie = movies[index];
+                    return ListTile(
+                      leading: Image.network(movie["medium_cover_image"]),
+                      title: Text(
+                        movie["title"],
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        "Rating: ${movie["rating"]}",
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
