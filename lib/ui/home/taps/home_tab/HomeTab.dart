@@ -1,5 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import '../../../../core/resources/AssetsManager.dart';
 import '../../widgets/big_movie_card.dart';
 import '../../widgets/small_movie_card.dart';
@@ -22,14 +22,6 @@ class _HomeTabState extends State<HomeTab> {
 
   final List<double> ratings = [7.7, 8.0, 7.9];
 
-  final PageController _pageController = PageController(viewportFraction: 0.75);
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,87 +31,75 @@ class _HomeTabState extends State<HomeTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            /// الجزء الأول (خلفية + blur + الكروت)
-            SizedBox(
-              height: 500, // ارتفاع الجزء الأول
-              child: Stack(
-                children: [
-                  /// الخلفية
-                  Positioned.fill(
-                    child: Image.asset(
-                      movies[selectedIndex],
-                      fit: BoxFit.cover,
-                    ),
+            /// الخلفية
+            Stack(
+              children: [
+                /// الصورة الخلفية
+                Positioned.fill(
+                  child: Image.asset(
+                    movies[selectedIndex],
+                    fit: BoxFit.cover,
                   ),
+                ),
 
-                  /// blur تحت الكروت
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    height: 200,
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                      child: Container(
-                        color: Colors.transparent,
+                /// طبقة التعتيم فوق الصورة
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.3), // فوق خفيف
+                          Colors.black.withOpacity(0.6), // وسط
+                          Colors.black.withOpacity(0.9), // تحت غامق جدًا
+                        ],
                       ),
                     ),
                   ),
+                ),
 
-                  /// الكروت + Available Now
-                  Column(
-                    children: [
-                      SizedBox(height: 15,),
-                      Image.asset(
-                        AssetsManager.Available_Now,
-                        width: double.infinity,
-                        fit: BoxFit.contain,
-                      ),
-                      SizedBox(
-                        height: 260,
-                        child: PageView.builder(
-                          itemCount: movies.length,
-                          controller: _pageController,
-                          onPageChanged: (index) {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          itemBuilder: (context, index) {
-                            double scale =
-                            selectedIndex == index ? 1.0 : 0.85;
+                /// Available Now + الكروت الكبيرة
+                Column(
+                  children: [
+                    const SizedBox(height: 80), // padding من فوق
+                    Image.asset(
+                      AssetsManager.Available_Now,
+                      width: double.infinity,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 12),
 
-                            return TweenAnimationBuilder(
-                              tween: Tween<double>(
-                                  begin: scale, end: scale),
-                              duration:
-                              const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                              builder: (context, value, child) {
-                                return Transform.scale(
-                                  scale: value,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    child: BigMovieCard(
-                                      imagePath: movies[index],
-                                      rating: ratings[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
+                    /// Carousel Slider
+                    CarouselSlider(
+                      items: movies.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        String movie = entry.value;
+
+                        return BigMovieCard(
+                          imagePath: movie,
+                          rating: ratings[index],
+                        );
+                      }).toList(),
+                      options: CarouselOptions(
+                        height: 280,
+                        viewportFraction: 0.65,
+                        enlargeCenterPage: true,
+                        enableInfiniteScroll: true,
+                        autoPlay: false,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
 
-            /// الجزء اللي بعد البلور (خلفية سودا)
+            /// الجزء الأسود اللي تحت (Watch Now)
             Container(
               width: double.infinity,
               color: Colors.black,
@@ -127,13 +107,12 @@ class _HomeTabState extends State<HomeTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-
-                  /// Watch Now
                   Image.asset(
                     AssetsManager.Watch_Now,
                     width: double.infinity,
                     fit: BoxFit.contain,
                   ),
+                  const SizedBox(height: 12),
                   SizedBox(
                     height: 180,
                     child: ListView(
@@ -148,7 +127,6 @@ class _HomeTabState extends State<HomeTab> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
                 ],
               ),
             ),
