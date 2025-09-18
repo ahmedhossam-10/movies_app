@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../core/resources/AssetsManager.dart';
 import '../../widgets/big_movie_card.dart';
 import '../../widgets/small_movie_card.dart';
@@ -130,7 +131,12 @@ class _HomeTabState extends State<HomeTab> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context,SortTab.routeName);
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: SortTab(),
+                              withNavBar: true,
+                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );
                           },
                           child:Text(
                             "See More".tr(),
@@ -180,7 +186,12 @@ class _HomeTabState extends State<HomeTab> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context,SortTab.routeName);
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: SortTab(),
+                              withNavBar: true,
+                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );
                           },
                           child:Text(
                             "See More".tr(),
@@ -230,7 +241,12 @@ class _HomeTabState extends State<HomeTab> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context,SortTab.routeName);
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: SortTab(),
+                              withNavBar: true,
+                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );
                           },
                           child:Text(
                             "See More".tr(),
@@ -280,8 +296,12 @@ class _HomeTabState extends State<HomeTab> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context,SortTab.routeName);
-                          },
+                            PersistentNavBarNavigator.pushNewScreen(
+                                context,
+                                screen: SortTab(),
+                            withNavBar: true,
+                            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );},
                           child:Text(
                             "See More".tr(),
                             style: TextStyle(

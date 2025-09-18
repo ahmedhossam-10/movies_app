@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_app/core/PrefsManager.dart';
 import 'package:movies_app/ui/home/screen/home_screen.dart';
+import 'package:movies_app/ui/home/taps/home_tab/HomeTab.dart';
+import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
 import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 import 'package:movies_app/ui/splash/screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,6 +62,8 @@ class MyApp extends StatelessWidget {
         SplashScreen.routeName: (_) => SplashScreen(),
         SignUpScreen.routeName: (_) => SignUpScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
+        HomeTab.routeName: (_) => HomeTab(),
+        SortTab.routeName: (_) => SortTab(),
       },
     );
   }
