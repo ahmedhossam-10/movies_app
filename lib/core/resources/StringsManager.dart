@@ -9,4 +9,6 @@ abstract final class StringsManager{
   static const String login = 'Login';
   static const String register = 'Register';
   static const String avatar = 'Avatar';
+  static const String Action = 'Action';
+  static const String seeMore = 'See More';
 }

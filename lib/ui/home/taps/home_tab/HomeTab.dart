@@ -1,5 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:movies_app/core/resources/ColorManager.dart';
+import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
 import '../../../../core/resources/AssetsManager.dart';
 import '../../widgets/big_movie_card.dart';
 import '../../widgets/small_movie_card.dart';
@@ -72,14 +75,17 @@ class _HomeTabState extends State<HomeTab> {
                         int index = entry.key;
                         String movie = entry.value;
 
-                        return BigMovieCard(
-                          imagePath: movie,
-                          rating: ratings[index],
+                        return AspectRatio(
+                          aspectRatio: 4 / 5,
+                          child: BigMovieCard(
+                            imagePath: movie,
+                            rating: ratings[index % ratings.length],
+                          ),
                         );
                       }).toList(),
                       options: CarouselOptions(
-                        height: 280,
-                        viewportFraction: 0.65,
+                        height: 300,
+                        viewportFraction: 0.55,
                         enlargeCenterPage: true,
                         enableInfiniteScroll: true,
                         autoPlay: false,
@@ -108,18 +114,205 @@ class _HomeTabState extends State<HomeTab> {
                     fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 12),
-                  SizedBox(
-                    height: 180,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie2, rating: 8.0),
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie3, rating: 7.9),
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie1, rating: 7.7),
+                        Text(
+                          "Action".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context,SortTab.routeName);
+                          },
+                          child:Text(
+                            "See More".tr(),
+                            style: TextStyle(
+                              color: ColorManager.yellow,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
                       ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    height: 220,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 5),
+                      itemBuilder: (context, index) {
+                        return AspectRatio(
+                          aspectRatio: 3 / 4,
+                          child: SmallMovieCard(
+                            imagePath: movies[index],
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Adventure".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context,SortTab.routeName);
+                          },
+                          child:Text(
+                            "See More".tr(),
+                            style: TextStyle(
+                              color: ColorManager.yellow,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    height: 220,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 5),
+                      itemBuilder: (context, index) {
+                        return AspectRatio(
+                          aspectRatio: 3 / 4,
+                          child: SmallMovieCard(
+                            imagePath: movies[index],
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Animation".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context,SortTab.routeName);
+                          },
+                          child:Text(
+                            "See More".tr(),
+                            style: TextStyle(
+                              color: ColorManager.yellow,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    height: 220,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 5),
+                      itemBuilder: (context, index) {
+                        return AspectRatio(
+                          aspectRatio: 3 / 4,
+                          child: SmallMovieCard(
+                            imagePath: movies[index],
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Biography".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context,SortTab.routeName);
+                          },
+                          child:Text(
+                            "See More".tr(),
+                            style: TextStyle(
+                              color: ColorManager.yellow,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    height: 220,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 5),
+                      itemBuilder: (context, index) {
+                        return AspectRatio(
+                          aspectRatio: 3 / 4,
+                          child: SmallMovieCard(
+                            imagePath: movies[index],
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
