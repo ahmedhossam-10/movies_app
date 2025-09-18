@@ -31,10 +31,9 @@ class _HomeTabState extends State<HomeTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// الخلفية
+
             Stack(
               children: [
-                /// الصورة الخلفية
                 Positioned.fill(
                   child: Image.asset(
                     movies[selectedIndex],
@@ -42,7 +41,6 @@ class _HomeTabState extends State<HomeTab> {
                   ),
                 ),
 
-                /// طبقة التعتيم فوق الصورة
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
@@ -50,19 +48,18 @@ class _HomeTabState extends State<HomeTab> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withOpacity(0.3), // فوق خفيف
-                          Colors.black.withOpacity(0.6), // وسط
-                          Colors.black.withOpacity(0.9), // تحت غامق جدًا
+                          Colors.black.withOpacity(0.3),
+                          Colors.black.withOpacity(0.6),
+                          Colors.black.withOpacity(0.9),
                         ],
                       ),
                     ),
                   ),
                 ),
 
-                /// Available Now + الكروت الكبيرة
                 Column(
                   children: [
-                    const SizedBox(height: 80), // padding من فوق
+                    const SizedBox(height: 80),
                     Image.asset(
                       AssetsManager.Available_Now,
                       width: double.infinity,
@@ -70,7 +67,6 @@ class _HomeTabState extends State<HomeTab> {
                     ),
                     const SizedBox(height: 12),
 
-                    /// Carousel Slider
                     CarouselSlider(
                       items: movies.asMap().entries.map((entry) {
                         int index = entry.key;
@@ -99,7 +95,6 @@ class _HomeTabState extends State<HomeTab> {
               ],
             ),
 
-            /// الجزء الأسود اللي تحت (Watch Now)
             Container(
               width: double.infinity,
               color: Colors.black,
