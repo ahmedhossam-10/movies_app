@@ -32,7 +32,6 @@ class _HomeTabState extends State<HomeTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          // ===== الجزء الأول (الخلفية + الكروسل) =====
           Stack(
             children: [
               Positioned.fill(
@@ -97,7 +96,6 @@ class _HomeTabState extends State<HomeTab> {
             ],
           ),
 
-          // ===== باقي الأقسام =====
           Container(
             width: double.infinity,
             color: Colors.black,
