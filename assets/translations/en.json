@@ -24,5 +24,10 @@
   "weakPassword": "The password provided is too weak.",
   "emailInUse": "The account already exists for that email.",
   "invalidEmail": "The email address is not valid.",
-  "unknownError": "Something went wrong, please try again."
+  "unknownError": "Something went wrong, please try again.",
+  "See More": "See More",
+  "Action": "Action",
+  "Biography": "Biography",
+  "Animation": "Animation",
+  "Adventure": "Adventure"
 }

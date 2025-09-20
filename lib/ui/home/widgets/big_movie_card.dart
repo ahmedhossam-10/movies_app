@@ -18,7 +18,7 @@ class BigMovieCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         image: DecorationImage(
-          image: AssetImage(imagePath), // هنا هنستخدم الـ AssetsManager
+          image: AssetImage(imagePath),
           fit: BoxFit.cover,
         ),
       ),

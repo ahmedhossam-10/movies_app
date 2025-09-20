@@ -1,5 +1,9 @@
-import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:movies_app/core/resources/ColorManager.dart';
+import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../core/resources/AssetsManager.dart';
 import '../../widgets/big_movie_card.dart';
 import '../../widgets/small_movie_card.dart';
@@ -22,14 +26,6 @@ class _HomeTabState extends State<HomeTab> {
 
   final List<double> ratings = [7.7, 8.0, 7.9];
 
-  final PageController _pageController = PageController(viewportFraction: 0.75);
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,86 +36,72 @@ class _HomeTabState extends State<HomeTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            /// الجزء الأول (خلفية + blur + الكروت)
-            SizedBox(
-              height: 500, // ارتفاع الجزء الأول
-              child: Stack(
-                children: [
-                  /// الخلفية
-                  Positioned.fill(
-                    child: Image.asset(
-                      movies[selectedIndex],
-                      fit: BoxFit.cover,
-                    ),
+            Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset(
+                    movies[selectedIndex],
+                    fit: BoxFit.cover,
                   ),
+                ),
 
-                  /// blur تحت الكروت
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    height: 200,
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                      child: Container(
-                        color: Colors.transparent,
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.3),
+                          Colors.black.withOpacity(0.6),
+                          Colors.black.withOpacity(0.9),
+                        ],
                       ),
                     ),
                   ),
+                ),
 
-                  /// الكروت + Available Now
-                  Column(
-                    children: [
-                      SizedBox(height: 15,),
-                      Image.asset(
-                        AssetsManager.Available_Now,
-                        width: double.infinity,
-                        fit: BoxFit.contain,
-                      ),
-                      SizedBox(
-                        height: 260,
-                        child: PageView.builder(
-                          itemCount: movies.length,
-                          controller: _pageController,
-                          onPageChanged: (index) {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          itemBuilder: (context, index) {
-                            double scale =
-                            selectedIndex == index ? 1.0 : 0.85;
+                Column(
+                  children: [
+                    const SizedBox(height: 80),
+                    Image.asset(
+                      AssetsManager.Available_Now,
+                      width: double.infinity,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 12),
 
-                            return TweenAnimationBuilder(
-                              tween: Tween<double>(
-                                  begin: scale, end: scale),
-                              duration:
-                              const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                              builder: (context, value, child) {
-                                return Transform.scale(
-                                  scale: value,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    child: BigMovieCard(
-                                      imagePath: movies[index],
-                                      rating: ratings[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
+                    CarouselSlider(
+                      items: movies.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        String movie = entry.value;
+
+                        return AspectRatio(
+                          aspectRatio: 4 / 5,
+                          child: BigMovieCard(
+                            imagePath: movie,
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      }).toList(),
+                      options: CarouselOptions(
+                        height: 300,
+                        viewportFraction: 0.55,
+                        enlargeCenterPage: true,
+                        enableInfiniteScroll: true,
+                        autoPlay: false,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
 
-            /// الجزء اللي بعد البلور (خلفية سودا)
             Container(
               width: double.infinity,
               color: Colors.black,
@@ -127,28 +109,232 @@ class _HomeTabState extends State<HomeTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-
-                  /// Watch Now
                   Image.asset(
                     AssetsManager.Watch_Now,
                     width: double.infinity,
                     fit: BoxFit.contain,
                   ),
-                  SizedBox(
-                    height: 180,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
+                  const SizedBox(height: 12),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie2, rating: 8.0),
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie3, rating: 7.9),
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie1, rating: 7.7),
+                        Text(
+                          "Action".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: SortTab(),
+                              withNavBar: true,
+                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );
+                          },
+                          child:Text(
+                            "See More".tr(),
+                            style: TextStyle(
+                              color: ColorManager.yellow,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    height: 220,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 5),
+                      itemBuilder: (context, index) {
+                        return AspectRatio(
+                          aspectRatio: 3 / 4,
+                          child: SmallMovieCard(
+                            imagePath: movies[index],
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Adventure".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: SortTab(),
+                              withNavBar: true,
+                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );
+                          },
+                          child:Text(
+                            "See More".tr(),
+                            style: TextStyle(
+                              color: ColorManager.yellow,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    height: 220,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 5),
+                      itemBuilder: (context, index) {
+                        return AspectRatio(
+                          aspectRatio: 3 / 4,
+                          child: SmallMovieCard(
+                            imagePath: movies[index],
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Animation".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: SortTab(),
+                              withNavBar: true,
+                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );
+                          },
+                          child:Text(
+                            "See More".tr(),
+                            style: TextStyle(
+                              color: ColorManager.yellow,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    height: 220,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 5),
+                      itemBuilder: (context, index) {
+                        return AspectRatio(
+                          aspectRatio: 3 / 4,
+                          child: SmallMovieCard(
+                            imagePath: movies[index],
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Biography".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                                context,
+                                screen: SortTab(),
+                            withNavBar: true,
+                            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );},
+                          child:Text(
+                            "See More".tr(),
+                            style: TextStyle(
+                              color: ColorManager.yellow,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    height: 220,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 5),
+                      itemBuilder: (context, index) {
+                        return AspectRatio(
+                          aspectRatio: 3 / 4,
+                          child: SmallMovieCard(
+                            imagePath: movies[index],
+                            rating: ratings[index % ratings.length],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
