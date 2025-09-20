@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/core/PrefsManager.dart';
 import 'package:movies_app/ui/home/screen/home_screen.dart';
 import 'package:movies_app/ui/home/taps/home_tab/HomeTab.dart';
+import 'package:movies_app/ui/home/taps/search_tab/SearchTab.dart';
 import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
 import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 import 'package:movies_app/ui/splash/screen/splash_screen.dart';
@@ -57,13 +58,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: HomeScreen.routeName,
+      initialRoute: SearchTab.routeName,
       routes: {
         SplashScreen.routeName: (_) => SplashScreen(),
         SignUpScreen.routeName: (_) => SignUpScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
         HomeTab.routeName: (_) => HomeTab(),
         SortTab.routeName: (_) => SortTab(),
+        SearchTab.routeName: (_) => SearchTab(),
       },
     );
   }
