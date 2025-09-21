@@ -1,83 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/ui/signIn/screen/signIn_screen.dart';
 import 'package:movies_app/ui/splash/screen/splash_screen.dart';
 import 'package:movies_app/ui/start/screen/start_screen.dart';
-import 'package:movies_app/ui/splash/screen/splash_screen.dart';
-import 'package:movies_app/ui/start/screen/start_screen.dart';
-import 'home_page.dart';
+import 'ui/homePage/home_page.dart';
 import 'ui/onboarding/screen/screen/onboarding_page.dart';
 import 'onboarding_process.dart';
 
 void main() => runApp(const MyApp());
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      debugShowCheckedModeBanner: false,
-      initialRoute: SplashScreen.routeName,
-      routes: {
-        SplashScreen.routeName:(_)=>SplashScreen(),
-        StartScreen.routeName:(_)=>StartScreen(),
-      },
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  bool? seenOnboarding;
-
-  @override
-  void initState() {
-    super.initState();
-    checkOnboarding();
-  }
-
-  void checkOnboarding() async {
-    bool seen = await OnboardingProcess.hasSeenOnboarding();
-    if (!mounted) return;
-    setState(() => seenOnboarding = seen);
+  Future<bool> getSeenOnboarding() async {
+    return await OnboardingProcess.hasSeenOnboarding();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (seenOnboarding == null) {
-      return const MaterialApp(
-        home: Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        ),
-      );
-    }
-
     return MaterialApp(
       title: 'Movies App',
       debugShowCheckedModeBanner: false,
-      home: seenOnboarding! ? HomePage() : OnBoardingPage(),
+      home: const SplashScreen(),
       routes: {
         SplashScreen.routeName: (_) => const SplashScreen(),
         StartScreen.routeName: (_) => const StartScreen(),
-        HomePage.routeName: (_) => HomePage(),
-        OnBoardingPage.routeName: (_) => OnBoardingPage(),
+        HomePage.routeName: (_) =>  HomePage(),
+        OnBoardingPage.routeName: (_) => const OnBoardingPage(),
+        SignInScreen.routeName: (_) => const SignInScreen(),
       },
     );
   }
 }
+
