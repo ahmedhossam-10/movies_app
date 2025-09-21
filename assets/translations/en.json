@@ -9,6 +9,10 @@
   "login": "Login",
   "register": "Register",
   "avatar": "Avatar",
+  "donotHaveAcc" : "Don’t Have Account ?",
+  "createOne" : "Create One",
+  "noUserFound" : "No User Found",
+  "or" : "OR",
 
   "nameReq": "Name can't be empty",
   "emailReq": "Email can't be empty",

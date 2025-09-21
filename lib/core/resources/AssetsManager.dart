@@ -25,5 +25,6 @@ abstract final class AssetsManager {
   static const String profile_selected = "assets/svg/profile selected.svg";
   static const String profile_unselected = "assets/svg/profiel unselected.svg";
   static const String empty = "assets/images/Empty.png";
+  static const String google = "assets/svg/icon _google.svg";
 
 }
