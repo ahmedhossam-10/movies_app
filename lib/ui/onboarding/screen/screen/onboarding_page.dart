@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:movies_app/onboarding_process.dart';
+import 'package:movies_app/ui/onboarding/screen/widgets/onboarding_process.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import 'package:movies_app/ui/signIn/screen/signIn_screen.dart';
 

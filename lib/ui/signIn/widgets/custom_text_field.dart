@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final String hintText;
   final bool isPassword;
   final IconData? icon;
   final String? svgIcon;
 
-  CustomTextField({
+  const CustomTextField({
     required this.hintText,
     this.isPassword = false,
     this.icon,
@@ -16,14 +16,21 @@ class CustomTextField extends StatelessWidget {
     super.key,
   });
 
+  @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool _obscureText = true;
+
   String? _validate(String? value) {
     if (value == null || value.isEmpty) return 'This field is Required';
 
-    if (isPassword && value.length < 6) {
+    if (widget.isPassword && value.length < 6) {
       return 'Password must be at least 6 characters';
     }
 
-    if (!isPassword) {
+    if (!widget.isPassword) {
       final emailRegex = RegExp(
           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
       if (!emailRegex.hasMatch(value)) return 'Please enter a valid email';
@@ -35,7 +42,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      obscureText: isPassword,
+      obscureText: widget.isPassword ? _obscureText : false,
       style: TextStyle(color: ColorManger.white),
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
@@ -47,20 +54,33 @@ class CustomTextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: ColorManger.darkGray,
-        labelText: hintText,
+        labelText: widget.hintText,
         labelStyle: TextStyle(color: ColorManger.white),
         floatingLabelStyle: TextStyle(color: ColorManger.white),
-        prefixIcon: icon != null
-            ? Icon(icon, color: ColorManger.white)
-            : svgIcon != null
+        prefixIcon: widget.icon != null
+            ? Icon(widget.icon, color: ColorManger.white)
+            : widget.svgIcon != null
             ? Padding(
           padding: const EdgeInsets.all(12.0),
           child: SvgPicture.asset(
-            svgIcon!,
+            widget.svgIcon!,
             color: ColorManger.white,
             width: 20,
             height: 20,
           ),
+        )
+            : null,
+        suffixIcon: widget.isPassword
+            ? IconButton(
+          icon: Icon(
+            _obscureText ? Icons.visibility_off : Icons.visibility,
+            color: ColorManger.white,
+          ),
+          onPressed: () {
+            setState(() {
+              _obscureText = !_obscureText;
+            });
+          },
         )
             : null,
       ),
@@ -68,4 +88,3 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
-

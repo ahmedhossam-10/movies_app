@@ -4,7 +4,8 @@ import 'package:movies_app/ui/splash/screen/splash_screen.dart';
 import 'package:movies_app/ui/start/screen/start_screen.dart';
 import 'ui/homePage/home_page.dart';
 import 'ui/onboarding/screen/screen/onboarding_page.dart';
-import 'onboarding_process.dart';
+import 'ui/onboarding/screen/widgets/onboarding_process.dart';
+import 'package:movies_app/ui/register/register_screen/register_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         HomePage.routeName: (_) =>  HomePage(),
         OnBoardingPage.routeName: (_) => const OnBoardingPage(),
         SignInScreen.routeName: (_) => const SignInScreen(),
+        RegisterScreen.routeName: (_) => const RegisterScreen(),
       },
     );
   }

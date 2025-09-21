@@ -3,6 +3,8 @@ import 'package:movies_app/core/resources/AssetsManager.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import 'package:movies_app/ui/homePage/home_page.dart';
 import 'package:movies_app/ui/signIn/widgets/custom_text_field.dart';
+import 'package:movies_app/ui/register/register_screen/register_screen.dart';
+
 class SignInScreen extends StatefulWidget {
   static const String routeName = '/sign-in';
   const SignInScreen({super.key});
@@ -36,6 +38,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: ColorManger.yellow,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
             
                               ),
                               onPressed: (){
@@ -56,11 +60,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-            
+                            Navigator.pushNamed(context, RegisterScreen.routeName);
                           },
+
                           child: Text(
                             'Create One',
-                            style: TextStyle(color: ColorManger.yellow),
+                            style: TextStyle(color: ColorManger.yellow,
+                            fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -91,6 +97,32 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 26,),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorManger.yellow,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            onPressed: () {
+                              // هنا هتحط كود تسجيل الدخول بجوجل
+                            },
+                            label: Text(
+                              'Login With Google',
+                              style: TextStyle(
+                                color: ColorManger.darkGray,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
             
                   ],
                 ),
