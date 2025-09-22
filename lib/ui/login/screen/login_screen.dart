@@ -46,6 +46,7 @@ class _LogInScreenState extends State<LogInScreen> {
     return Scaffold(
       backgroundColor: ColorManager.primaryColor,
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         title: Text(
           "login".tr(),
           style: TextStyle(
@@ -57,204 +58,206 @@ class _LogInScreenState extends State<LogInScreen> {
         centerTitle: true,
         backgroundColor: ColorManager.primaryColor,
       ),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              // Avatars
-
-              Image.asset(AssetsManager.movieLogo),
-              const SizedBox(height: 69),
-
-
-
-              // Email
-              CustomField(
-                isPassword: false,
-                hint: 'email'.tr(),
-                keyboard: TextInputType.emailAddress,
-                controller: emailController,
-                validation: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "emailReq".tr();
-                  }
-                  if (!RegExp(emailRegex).hasMatch(value)) {
-                    return "emailInvalid".tr();
-                  }
-                  return null;
-                },
-                prefix: AssetsManager.email,
-              ),
-              const SizedBox(height: 24),
-
-              // Password
-              CustomField(
-                isPassword: true,
-                hint: 'password'.tr(),
-                keyboard: TextInputType.visiblePassword,
-                controller: passwordController,
-                validation: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "passReq".tr();
-                  }
-                  if (value.length < 6) {
-                    return "passWeak".tr();
-                  }
-                  return null;
-                },
-                prefix: AssetsManager.password,
-              ),
-              const SizedBox(height: 33),
-
-
-
-              // Log In Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      await login();
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                // Avatars
+        
+                Image.asset(AssetsManager.movieLogo),
+                const SizedBox(height: 69),
+        
+        
+        
+                // Email
+                CustomField(
+                  isPassword: false,
+                  hint: 'email'.tr(),
+                  keyboard: TextInputType.emailAddress,
+                  controller: emailController,
+                  validation: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "emailReq".tr();
                     }
+                    if (!RegExp(emailRegex).hasMatch(value)) {
+                      return "emailInvalid".tr();
+                    }
+                    return null;
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorManager.yellow,
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: Text(
-                    'login'.tr(),
-                    style: TextStyle(
-                      color: ColorManager.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  prefix: AssetsManager.email,
                 ),
-              ),
-
-              const SizedBox(height: 23),
-
-              // have acc
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "donotHaveAcc".tr(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, SignUpScreen.routeName);
+                const SizedBox(height: 24),
+        
+                // Password
+                CustomField(
+                  isPassword: true,
+                  hint: 'password'.tr(),
+                  keyboard: TextInputType.visiblePassword,
+                  controller: passwordController,
+                  validation: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "passReq".tr();
+                    }
+                    if (value.length < 6) {
+                      return "passWeak".tr();
+                    }
+                    return null;
+                  },
+                  prefix: AssetsManager.password,
+                ),
+                const SizedBox(height: 33),
+        
+        
+        
+                // Log In Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                         login();
+                      }
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorManager.yellow,
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
                     child: Text(
-                      "createOne".tr(),
+                      'login'.tr(),
                       style: TextStyle(
-                        color: Colors.yellow,
-                        fontSize: 14,
+                        color: ColorManager.primaryColor,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 23),
-
-              // Divider
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 90,
-                    child: Divider(
-                      color: ColorManager.yellow,
-                      thickness: 1,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'or'.tr(),
-                    style: TextStyle(color: ColorManager.yellow, fontSize: 14),
-                  ),
-                  SizedBox(width: 10),
-                  Container(
-                    width: 90,
-                    child: Divider(
-                      color: ColorManager.yellow,
-                      thickness: 1,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 28),
-
-              // login with google
-              // Google Login Button (UI only)
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {
-                    /// LOGIC HERE
-                    Navigator.pushNamed(context, HomeScreen.routeName);
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: ColorManager.yellow),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    backgroundColor: ColorManager.yellow,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        AssetsManager.google,
-                        height: 24,
-                        width: 24,
+                ),
+        
+                const SizedBox(height: 23),
+        
+                // have acc
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "donotHaveAcc".tr(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
                       ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        "Login with Google",
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, SignUpScreen.routeName);
+                      },
+                      child: Text(
+                        "createOne".tr(),
                         style: TextStyle(
-                          color: ColorManager.primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          color: Colors.yellow,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 23),
+        
+                // Divider
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 90,
+                      child: Divider(
+                        color: ColorManager.yellow,
+                        thickness: 1,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'or'.tr(),
+                      style: TextStyle(color: ColorManager.yellow, fontSize: 14),
+                    ),
+                    SizedBox(width: 10),
+                    Container(
+                      width: 90,
+                      child: Divider(
+                        color: ColorManager.yellow,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 28),
+        
+                // login with google
+                // Google Login Button (UI only)
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      /// LOGIC HERE
+                      Navigator.pushNamed(context, HomeScreen.routeName);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: ColorManager.yellow),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      backgroundColor: ColorManager.yellow,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          AssetsManager.google,
+                          height: 24,
+                          width: 24,
+                        ),
+                        const SizedBox(width: 10),
+                        const Text(
+                          "Login with Google",
+                          style: TextStyle(
+                            color: ColorManager.primaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 28),
-
-              // Language Switch
-              CustomSwitch(
-                onChange: (value) {
-                  setState(() {
-                    selectedLanguage = value;
-                  });
-                  if (selectedLanguage == 1) {
-                    context.setLocale(const Locale("ar"));
-                  } else {
-                    context.setLocale(const Locale("en"));
-                  }
-                },
-                icons: [
-                  SvgPicture.asset(AssetsManager.us, height: 30, width: 30),
-                  SvgPicture.asset(AssetsManager.eg, height: 30, width: 30),
-                ],
-                current: selectedLanguage,
-              ),
-            ],
+        
+                const SizedBox(height: 28),
+        
+                // Language Switch
+                CustomSwitch(
+                  onChange: (value) {
+                    setState(() {
+                      selectedLanguage = value;
+                    });
+                    if (selectedLanguage == 1) {
+                      context.setLocale(const Locale("ar"));
+                    } else {
+                      context.setLocale(const Locale("en"));
+                    }
+                  },
+                  icons: [
+                    SvgPicture.asset(AssetsManager.us, height: 30, width: 30),
+                    SvgPicture.asset(AssetsManager.eg, height: 30, width: 30),
+                  ],
+                  current: selectedLanguage,
+                ),
+              ],
+            ),
           ),
         ),
       ),

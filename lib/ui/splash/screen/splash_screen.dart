@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:movies_app/core/resources/AssetsManager.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
+import 'package:movies_app/ui/home/screen/home_screen.dart';
+import 'package:movies_app/ui/login/screen/login_screen.dart';
 import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -17,9 +21,14 @@ class SplashScreen extends StatelessWidget {
         child: Image.asset(AssetsManager.movieLogo),
       ).animate(
         onComplete: (controller){
-          Navigator.pushReplacementNamed(context,SignUpScreen.routeName);
-        }
-      ).scale(duration: Duration(seconds: 2)),
+          if(FirebaseAuth.instance.currentUser==null) {
+            Navigator.pushReplacementNamed(context, LogInScreen.routeName);
+          }else{
+            Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+          }
+          },
+      )
+          .scale(duration: Duration(seconds: 2)),
     );
   }
 }

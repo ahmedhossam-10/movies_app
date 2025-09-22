@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_app/core/DialogUtils.dart';
 import 'package:movies_app/ui/home/screen/home_screen.dart';
+import 'package:movies_app/ui/login/screen/login_screen.dart';
 
 import '../../../core/resources/AssetsManager.dart';
 import '../../../core/resources/ColorManager.dart';
@@ -236,7 +237,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // TODO: Navigate to Login Screen
+                        Navigator.pushNamed(context, LogInScreen.routeName);
                       },
                       child: Text(
                         "login".tr(),
@@ -287,7 +288,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       Navigator.pop(context); // close loading
-      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false,);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 

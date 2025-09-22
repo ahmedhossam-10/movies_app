@@ -110,19 +110,15 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 const SizedBox(height: 12),
 
-                // 🟡 Action Section
                 buildCategoryRow(context, "Action".tr()),
                 buildMovieList(),
 
-                // 🟡 Adventure Section
                 buildCategoryRow(context, "Adventure".tr()),
                 buildMovieList(),
 
-                // 🟡 Animation Section
                 buildCategoryRow(context, "Animation".tr()),
                 buildMovieList(),
 
-                // 🟡 Biography Section
                 buildCategoryRow(context, "Biography".tr()),
                 buildMovieList(),
               ],
