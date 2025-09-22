@@ -46,7 +46,7 @@ class _LogInScreenState extends State<LogInScreen> {
     return Scaffold(
       backgroundColor: ColorManager.primaryColor,
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         title: Text(
           "login".tr(),
           style: TextStyle(
