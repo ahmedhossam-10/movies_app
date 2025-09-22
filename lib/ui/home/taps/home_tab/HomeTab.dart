@@ -1,5 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
@@ -25,6 +25,9 @@ class _HomeTabState extends State<HomeTab> {
 
   final List<double> ratings = [7.7, 8.0, 7.9];
 
+  // اللون الجديد
+  final Color backgroundColor = const Color(0xFF121312);
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -47,9 +50,9 @@ class _HomeTabState extends State<HomeTab> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.3),
-                        Colors.black.withOpacity(0.6),
-                        Colors.black.withOpacity(0.9),
+                        backgroundColor.withOpacity(0.3),
+                        backgroundColor.withOpacity(0.6),
+                        backgroundColor.withOpacity(0.9),
                       ],
                     ),
                   ),
@@ -98,7 +101,7 @@ class _HomeTabState extends State<HomeTab> {
 
           Container(
             width: double.infinity,
-            color: Colors.black,
+            color: backgroundColor, // 👈 الخلفية الجديدة
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

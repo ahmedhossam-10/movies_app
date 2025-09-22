@@ -91,59 +91,62 @@ class SortTab extends StatelessWidget {
 
     return DefaultTabController(
       length: categories.length,
-      child: SafeArea(
-        child: Column(
-          children: <Widget>[
-            ButtonsTabBar(
-              physics: const BouncingScrollPhysics(),
-              backgroundColor: Colors.yellow,
-              borderColor: Colors.yellow,
-              unselectedBackgroundColor: Colors.black,
-              unselectedBorderColor: Colors.yellow,
-              borderWidth: 2,
-              radius: 16,
-              buttonMargin: const EdgeInsets.symmetric(horizontal: 6),
-              labelStyle: const TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
-                color: Colors.black,
+      child: Scaffold(
+        backgroundColor: Color(0xFF121312),
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              ButtonsTabBar(
+                physics: const BouncingScrollPhysics(),
+                backgroundColor: Colors.yellow,
+                borderColor: Colors.yellow,
+                unselectedBackgroundColor: Colors.black,
+                unselectedBorderColor: Colors.yellow,
+                borderWidth: 2,
+                radius: 16,
+                buttonMargin: const EdgeInsets.symmetric(horizontal: 6),
+                labelStyle: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+                unselectedLabelStyle: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: Colors.yellow,
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: tabWidth / 4,
+                ),
+                tabs: categories.map((c) => Tab(text: c)).toList(),
               ),
-              unselectedLabelStyle: const TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
-                color: Colors.yellow,
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: tabWidth / 4,
-              ),
-              tabs: categories.map((c) => Tab(text: c)).toList(),
-            ),
-            SizedBox(height: 25,),
-            Expanded(
-              child: TabBarView(
-                children: categories.map((category) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GridView.builder(
-                      itemCount: movies.length,
-                      gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 0.65,
+              SizedBox(height: 25,),
+              Expanded(
+                child: TabBarView(
+                  children: categories.map((category) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                        itemCount: movies.length,
+                        gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio: 0.65,
+                        ),
+                        itemBuilder: (context, index) {
+                          return buildMovieCard(movies[index]);
+                        },
                       ),
-                      itemBuilder: (context, index) {
-                        return buildMovieCard(movies[index]);
-                      },
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
