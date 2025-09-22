@@ -3,6 +3,7 @@ import 'package:movies_app/core/resources/AssetsManager.dart';
 import 'package:movies_app/core/reusable_components/SearchField.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import '../../../../core/remote/network/ApiManager.dart';
+import '../../../../core/reusable_components/MovieCard.dart';
 
 class SearchTab extends StatefulWidget {
   static const String routeName = 'search';
@@ -74,40 +75,13 @@ class _SearchTabState extends State<SearchTab> {
                   itemCount: movies.length,
                   itemBuilder: (context, index) {
                     final movie = movies[index];
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Image.network(
-                              movie["medium_cover_image"],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            left: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.black54,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                "⭐ ${movie["rating"]}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    return MovieCard(
+                      imageUrl: movie["medium_cover_image"],
+                      rating: (movie["rating"] as num).toDouble(),
                     );
                   },
-                ),
+                )
+
               ),
           ],
         ),

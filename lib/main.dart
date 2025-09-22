@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: SplashScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       routes: {
         SplashScreen.routeName: (_) => SplashScreen(),
         SignUpScreen.routeName: (_) => SignUpScreen(),
