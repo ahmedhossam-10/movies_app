@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
-import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../core/resources/AssetsManager.dart';
+import '../../../../core/remote/network/ApiManager.dart';
 import '../../widgets/big_movie_card.dart';
 import '../../widgets/small_movie_card.dart';
 
 class HomeTab extends StatefulWidget {
+  final VoidCallback? onSeeMoreTap;
+
+  const HomeTab({super.key, this.onSeeMoreTap});
+
   static const String routeName = 'homeTab';
+
   @override
   State<HomeTab> createState() => _HomeTabState();
 }
@@ -17,16 +21,24 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   int selectedIndex = 0;
 
-  final List<String> movies = [
+
+  final List<String> topMovies = [
     AssetsManager.movie1,
     AssetsManager.movie2,
     AssetsManager.movie3,
   ];
 
-  final List<double> ratings = [7.7, 8.0, 7.9];
+  final List<double> topRatings = [7.7, 8.0, 7.9];
 
-  // اللون الجديد
   final Color backgroundColor = const Color(0xFF121312);
+
+
+  final List<String> categories = [
+    "Action",
+    "Adventure",
+    "Animation",
+    "Biography",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +51,7 @@ class _HomeTabState extends State<HomeTab> {
             children: [
               Positioned.fill(
                 child: Image.asset(
-                  movies[selectedIndex],
+                  topMovies[selectedIndex],
                   fit: BoxFit.cover,
                 ),
               ),
@@ -67,9 +79,8 @@ class _HomeTabState extends State<HomeTab> {
                     fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 12),
-
                   CarouselSlider(
-                    items: movies.asMap().entries.map((entry) {
+                    items: topMovies.asMap().entries.map((entry) {
                       int index = entry.key;
                       String movie = entry.value;
 
@@ -77,7 +88,7 @@ class _HomeTabState extends State<HomeTab> {
                         aspectRatio: 4 / 5,
                         child: BigMovieCard(
                           imagePath: movie,
-                          rating: ratings[index % ratings.length],
+                          rating: topRatings[index % topRatings.length],
                         ),
                       );
                     }).toList(),
@@ -101,7 +112,7 @@ class _HomeTabState extends State<HomeTab> {
 
           Container(
             width: double.infinity,
-            color: backgroundColor, // 👈 الخلفية الجديدة
+            color: backgroundColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -113,17 +124,18 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 const SizedBox(height: 12),
 
-                buildCategoryRow(context, "Action".tr()),
-                buildMovieList(),
+                ...categories.map((genre) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildCategoryRow(context, genre.tr(),
+                          onTap: widget.onSeeMoreTap),
+                      buildMovieListFromApi(genre),
+                    ],
+                  );
+                }).toList(),
 
-                buildCategoryRow(context, "Adventure".tr()),
-                buildMovieList(),
-
-                buildCategoryRow(context, "Animation".tr()),
-                buildMovieList(),
-
-                buildCategoryRow(context, "Biography".tr()),
-                buildMovieList(),
+                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -132,9 +144,10 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  Widget buildCategoryRow(BuildContext context, String title) {
+  Widget buildCategoryRow(BuildContext context, String title,
+      {VoidCallback? onTap}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -143,24 +156,17 @@ class _HomeTabState extends State<HomeTab> {
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
           TextButton(
-            onPressed: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: SortTab(),
-                withNavBar: true,
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              );
-            },
+            onPressed: onTap ?? () {},
             child: Text(
               "See More".tr(),
               style: TextStyle(
                 color: ColorManager.yellow,
                 fontSize: 16,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -169,21 +175,59 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  Widget buildMovieList() {
+  Widget buildMovieListFromApi(String genre) {
+    final String apiGenre = genre.toLowerCase();
+
     return SizedBox(
       height: 220,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        scrollDirection: Axis.horizontal,
-        itemCount: movies.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 5),
-        itemBuilder: (context, index) {
-          return AspectRatio(
-            aspectRatio: 3 / 4,
-            child: SmallMovieCard(
-              imagePath: movies[index],
-              rating: ratings[index % ratings.length],
-            ),
+      child: FutureBuilder<List<dynamic>>(
+        future: ApiManager.getMoviesByGenreAndLimit(apiGenre),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.yellow),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Error loading $genre movies",
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text(
+                "No movies found",
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          }
+
+          final movies = snapshot.data!;
+
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            scrollDirection: Axis.horizontal,
+            itemCount: movies.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final movie = movies[index] as Map<String, dynamic>;
+
+              final String imageUrl =
+                  (movie["medium_cover_image"] as String?) ?? AssetsManager.movie1;
+
+              final double rating = (movie["rating"] is num)
+                  ? (movie["rating"] as num).toDouble()
+                  : 0.0;
+
+              return AspectRatio(
+                aspectRatio: 3 / 4,
+                child: SmallMovieCard(
+                  imagePath: imageUrl,
+                  rating: rating,
+                ),
+              );
+            },
           );
         },
       ),

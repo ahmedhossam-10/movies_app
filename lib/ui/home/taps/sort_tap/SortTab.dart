@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import '../../../../core/remote/network/ApiManager.dart';
 
 class SortTab extends StatelessWidget {
   static const String routeName = 'sort';
@@ -17,39 +18,6 @@ class SortTab extends StatelessWidget {
     "Romance"
   ];
 
-  final List<Map<String, dynamic>> movies = const [
-    {
-      "title": "Black Widow",
-      "poster":
-      "https://image.tmdb.org/t/p/w500/qAZ0pzat24kLdO3o8ejmbLxyOac.jpg",
-      "rating": 7.7
-    },
-    {
-      "title": "Joker",
-      "poster":
-      "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-      "rating": 8.4
-    },
-    {
-      "title": "Iron Man 3",
-      "poster":
-      "https://image.tmdb.org/t/p/w500/qhPtAc1TKbMPqNvcdXSOn9Bn7hZ.jpg",
-      "rating": 7.1
-    },
-    {
-      "title": "Civil War",
-      "poster":
-      "https://image.tmdb.org/t/p/w500/rAGiXaUfPzY7CDEyNKUofk3Kw2e.jpg",
-      "rating": 7.8
-    },
-    {
-      "title": "Doctor Strange",
-      "poster":
-      "https://image.tmdb.org/t/p/w500/uGBVj3bEbCoZbDjjl9wTxcygko1.jpg",
-      "rating": 7.6
-    },
-  ];
-
   Widget buildMovieCard(Map<String, dynamic> movie) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
@@ -57,8 +25,12 @@ class SortTab extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.network(
-              movie["poster"],
+              movie["medium_cover_image"] ?? "",
               fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                color: Colors.grey,
+                child: const Icon(Icons.broken_image, color: Colors.white),
+              ),
             ),
           ),
           Positioned(
@@ -71,7 +43,7 @@ class SortTab extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
-                "⭐ ${movie["rating"]}",
+                "⭐ ${movie["rating"] ?? "N/A"}",
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -92,7 +64,7 @@ class SortTab extends StatelessWidget {
     return DefaultTabController(
       length: categories.length,
       child: Scaffold(
-        backgroundColor: Color(0xFF121312),
+        backgroundColor: const Color(0xFF121312),
         body: SafeArea(
           child: Column(
             children: <Widget>[
@@ -122,25 +94,55 @@ class SortTab extends StatelessWidget {
                 ),
                 tabs: categories.map((c) => Tab(text: c)).toList(),
               ),
-              SizedBox(height: 25,),
+              const SizedBox(height: 25),
               Expanded(
                 child: TabBarView(
                   children: categories.map((category) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GridView.builder(
-                        itemCount: movies.length,
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                          childAspectRatio: 0.65,
-                        ),
-                        itemBuilder: (context, index) {
-                          return buildMovieCard(movies[index]);
-                        },
-                      ),
+                    return FutureBuilder<List<dynamic>>(
+                      future: ApiManager.getAllMoviesByGenre(category),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.yellow,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              "Error: ${snapshot.error}",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              "No movies found",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        } else {
+                          final movies = snapshot.data!;
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GridView.builder(
+                              itemCount: movies.length,
+                              gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: 0.65,
+                              ),
+                              itemBuilder: (context, index) {
+                                return buildMovieCard(movies[index]);
+                              },
+                            ),
+                          );
+                        }
+                      },
                     );
                   }).toList(),
                 ),
