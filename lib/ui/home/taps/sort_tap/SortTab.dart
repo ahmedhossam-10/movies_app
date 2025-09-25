@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import '../../../../core/remote/network/ApiManager.dart';
 import '../../../movie_details/screen/movie_details_screen.dart';
@@ -24,7 +25,6 @@ class SortTab extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        print("SortTab clicked movie ID: $movieId");
         Navigator.pushNamed(
           context,
           MovieDetailsScreen.routeName,
@@ -32,7 +32,7 @@ class SortTab extends StatelessWidget {
         );
       },
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         child: Stack(
           children: [
             Positioned.fill(
@@ -41,25 +41,27 @@ class SortTab extends StatelessWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
                   color: Colors.grey,
-                  child: const Icon(Icons.broken_image, color: Colors.white),
+                  child: Icon(Icons.broken_image,
+                      color: Colors.white, size: 30.sp),
                 ),
               ),
             ),
             Positioned(
-              top: 8,
-              left: 8,
+              top: 8.h,
+              left: 8.w,
               child: Container(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: Colors.black54,
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Text(
                   "⭐ ${movie["rating"] ?? "N/A"}",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),
@@ -88,19 +90,19 @@ class SortTab extends StatelessWidget {
                 borderColor: Colors.yellow,
                 unselectedBackgroundColor: Colors.black,
                 unselectedBorderColor: Colors.yellow,
-                borderWidth: 2,
-                radius: 16,
-                buttonMargin: const EdgeInsets.symmetric(horizontal: 6),
-                labelStyle: const TextStyle(
+                borderWidth: 2.w,
+                radius: 16.r,
+                buttonMargin: EdgeInsets.symmetric(horizontal: 6.w),
+                labelStyle: TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w700,
-                  fontSize: 20,
+                  fontSize: 18.sp,
                   color: Colors.black,
                 ),
-                unselectedLabelStyle: const TextStyle(
+                unselectedLabelStyle: TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w700,
-                  fontSize: 20,
+                  fontSize: 18.sp,
                   color: Colors.yellow,
                 ),
                 contentPadding: EdgeInsets.symmetric(
@@ -108,7 +110,7 @@ class SortTab extends StatelessWidget {
                 ),
                 tabs: categories.map((c) => Tab(text: c)).toList(),
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: 25.h),
               Expanded(
                 child: TabBarView(
                   children: categories.map((category) {
@@ -117,37 +119,44 @@ class SortTab extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.yellow,
+                          return Center(
+                            child: SizedBox(
+                              width: 24.w,
+                              height: 24.w,
+                              child: const CircularProgressIndicator(
+                                color: Colors.yellow,
+                                strokeWidth: 2,
+                              ),
                             ),
                           );
                         } else if (snapshot.hasError) {
                           return Center(
                             child: Text(
                               "Error: ${snapshot.error}",
-                              style: const TextStyle(color: Colors.white),
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 14.sp),
                             ),
                           );
                         } else if (!snapshot.hasData ||
                             snapshot.data!.isEmpty) {
-                          return const Center(
+                          return Center(
                             child: Text(
                               "No movies found",
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 14.sp),
                             ),
                           );
                         } else {
                           final movies = snapshot.data!;
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.w),
                             child: GridView.builder(
                               itemCount: movies.length,
                               gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8.w,
+                                mainAxisSpacing: 8.h,
                                 childAspectRatio: 0.65,
                               ),
                               itemBuilder: (context, index) {

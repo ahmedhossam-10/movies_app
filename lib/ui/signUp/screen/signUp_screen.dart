@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/DialogUtils.dart';
 import 'package:movies_app/ui/home/screen/home_screen.dart';
 import 'package:movies_app/ui/login/screen/login_screen.dart';
@@ -23,7 +24,6 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  // Controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -56,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           "register".tr(),
           style: TextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
+            fontSize: 16.sp,
             color: ColorManager.yellow,
           ),
         ),
@@ -64,44 +64,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
         backgroundColor: ColorManager.primaryColor,
       ),
       body: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Form(
           key: formKey,
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Avatars
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 40,
+                      radius: 40.r,
                       backgroundImage: AssetImage(AssetsManager.avatar1),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16.w),
                     CircleAvatar(
-                      radius: 50,
+                      radius: 50.r,
                       backgroundImage: AssetImage(AssetsManager.avatar2),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16.w),
                     CircleAvatar(
-                      radius: 40,
+                      radius: 40.r,
                       backgroundImage: AssetImage(AssetsManager.avatar3),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 Text(
                   'avatar'.tr(),
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     color: ColorManager.white,
                   ),
                 ),
-                const SizedBox(height: 24),
-
-                // Name
+                SizedBox(height: 24.h),
                 CustomField(
                   isPassword: false,
                   hint: 'name'.tr(),
@@ -115,9 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   prefix: AssetsManager.name,
                 ),
-                const SizedBox(height: 24),
-
-                // Email
+                SizedBox(height: 24.h),
                 CustomField(
                   isPassword: false,
                   hint: 'email'.tr(),
@@ -134,9 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   prefix: AssetsManager.email,
                 ),
-                const SizedBox(height: 24),
-
-                // Password
+                SizedBox(height: 24.h),
                 CustomField(
                   isPassword: true,
                   hint: 'password'.tr(),
@@ -153,9 +146,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   prefix: AssetsManager.password,
                 ),
-                const SizedBox(height: 24),
-
-                // Confirm Password
+                SizedBox(height: 24.h),
                 CustomField(
                   isPassword: true,
                   hint: 'confirmPassword'.tr(),
@@ -172,9 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   prefix: AssetsManager.password,
                 ),
-                const SizedBox(height: 24),
-
-                // Phone Number
+                SizedBox(height: 24.h),
                 CustomField(
                   isPassword: false,
                   hint: 'phone'.tr(),
@@ -191,10 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   prefix: AssetsManager.phone,
                 ),
-
-                const SizedBox(height: 32),
-
-                // Sign Up Button
+                SizedBox(height: 32.h),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -205,25 +191,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorManager.yellow,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 14),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 50.w,
+                        vertical: 14.h,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                     ),
                     child: Text(
                       'createAcc'.tr(),
                       style: TextStyle(
                         color: ColorManager.primaryColor,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 17),
-
-                // have acc
+                SizedBox(height: 17.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -231,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       "haveAcc".tr(),
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
                     TextButton(
@@ -242,17 +228,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         "login".tr(),
                         style: TextStyle(
                           color: Colors.yellow,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
-
-                const SizedBox(height: 24),
-
-                /// Language Switch
+                SizedBox(height: 24.h),
                 CustomSwitch(
                   onChange: (value) {
                     setState(() {
@@ -265,8 +248,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
                   },
                   icons: [
-                    SvgPicture.asset(AssetsManager.us, height: 30, width: 30),
-                    SvgPicture.asset(AssetsManager.eg, height: 30, width: 30),
+                    SvgPicture.asset(AssetsManager.us, height: 30.h, width: 30.w),
+                    SvgPicture.asset(AssetsManager.eg, height: 30.h, width: 30.w),
                   ],
                   current: selectedLanguage,
                 ),
@@ -285,12 +268,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
-      Navigator.pop(context); // close loading
-      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false,);
+      Navigator.pop(context);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        HomeScreen.routeName,
+            (route) => false,
+      );
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-
       String message = "";
       if (e.code == 'weak-password') {
         message = "weakPassword".tr();
@@ -301,7 +286,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       } else {
         message = "unknownError".tr();
       }
-
       DialogUtils.showMessage(
         context,
         message,

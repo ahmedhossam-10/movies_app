@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BigMovieCard extends StatelessWidget {
   final String imagePath;
@@ -13,10 +14,10 @@ class BigMovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
-      margin:  EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      width: 200.w,
+      margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         image: DecorationImage(
           image: AssetImage(imagePath),
           fit: BoxFit.cover,
@@ -25,21 +26,21 @@ class BigMovieCard extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            top: 8,
-            left: 8,
+            top: 8.h,
+            left: 8.w,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.star, color: Colors.yellow, size: 16),
-                  const SizedBox(width: 4),
+                  Icon(Icons.star, color: Colors.yellow, size: 16.sp),
+                  SizedBox(width: 4.w),
                   Text(
                     rating.toString(),
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontSize: 14.sp),
                   ),
                 ],
               ),

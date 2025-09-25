@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import '../../../../core/resources/AssetsManager.dart';
 import '../../../../core/remote/network/ApiManager.dart';
@@ -51,6 +52,7 @@ class _HomeTabState extends State<HomeTab> {
                 child: Image.asset(
                   topMovies[selectedIndex],
                   fit: BoxFit.cover,
+                  height: 0.4.sh,
                 ),
               ),
               Positioned.fill(
@@ -70,13 +72,13 @@ class _HomeTabState extends State<HomeTab> {
               ),
               Column(
                 children: [
-                  const SizedBox(height: 80),
+                  SizedBox(height: 80.h),
                   Image.asset(
                     AssetsManager.Available_Now,
                     width: double.infinity,
                     fit: BoxFit.contain,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
                   CarouselSlider(
                     items: topMovies.asMap().entries.map((entry) {
                       int index = entry.key;
@@ -91,7 +93,7 @@ class _HomeTabState extends State<HomeTab> {
                       );
                     }).toList(),
                     options: CarouselOptions(
-                      height: 300,
+                      height: 0.35.sh,
                       viewportFraction: 0.55,
                       enlargeCenterPage: true,
                       enableInfiniteScroll: true,
@@ -107,21 +109,19 @@ class _HomeTabState extends State<HomeTab> {
               ),
             ],
           ),
-
           Container(
             width: double.infinity,
             color: backgroundColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 Image.asset(
                   AssetsManager.Watch_Now,
                   width: double.infinity,
                   fit: BoxFit.contain,
                 ),
-                const SizedBox(height: 12),
-
+                SizedBox(height: 12.h),
                 ...categories.map((genre) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,8 +132,7 @@ class _HomeTabState extends State<HomeTab> {
                     ],
                   );
                 }).toList(),
-
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
               ],
             ),
           ),
@@ -145,15 +144,15 @@ class _HomeTabState extends State<HomeTab> {
   Widget buildCategoryRow(BuildContext context, String title,
       {VoidCallback? onTap}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -163,7 +162,7 @@ class _HomeTabState extends State<HomeTab> {
               "See More".tr(),
               style: TextStyle(
                 color: ColorManager.yellow,
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -177,7 +176,7 @@ class _HomeTabState extends State<HomeTab> {
     final String apiGenre = genre.toLowerCase();
 
     return SizedBox(
-      height: 220,
+      height: 220.h,
       child: FutureBuilder<List<dynamic>>(
         future: ApiManager.getMoviesByGenreAndLimit(apiGenre),
         builder: (context, snapshot) {
@@ -189,14 +188,14 @@ class _HomeTabState extends State<HomeTab> {
             return Center(
               child: Text(
                 "Error loading $genre movies",
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 14.sp),
               ),
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
               child: Text(
                 "No movies found",
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 14.sp),
               ),
             );
           }
@@ -204,16 +203,15 @@ class _HomeTabState extends State<HomeTab> {
           final movies = snapshot.data!;
 
           return ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
             itemCount: movies.length,
-            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            separatorBuilder: (context, index) => SizedBox(width: 8.w),
             itemBuilder: (context, index) {
               final movie = movies[index] as Map<String, dynamic>;
 
               final String imageUrl =
-                  (movie["medium_cover_image"] as String?) ??
-                      AssetsManager.movie1;
+                  (movie["medium_cover_image"] as String?) ?? AssetsManager.movie1;
 
               final double rating = (movie["rating"] is num)
                   ? (movie["rating"] as num).toDouble()
@@ -228,7 +226,6 @@ class _HomeTabState extends State<HomeTab> {
                     context,
                     MovieDetailsScreen.routeName,
                     arguments: movieId,
-
                   );
                 },
                 child: AspectRatio(

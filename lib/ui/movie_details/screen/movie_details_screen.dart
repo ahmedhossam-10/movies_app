@@ -1,259 +1,276 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import 'package:movies_app/ui/movie_details/widgets/cast_widget.dart';
 import 'package:movies_app/ui/movie_details/widgets/genres_widget.dart';
 import 'package:movies_app/ui/movie_details/widgets/rating_widget.dart';
 import 'package:movies_app/ui/movie_details/widgets/screen_shot_widget.dart';
+import '../../../core/remote/network/ApiManager.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
-  static const String routeName = "movie details";
+  static const String routeName = 'details';
+  final int movieId;
 
-  const MovieDetailsScreen({super.key});
+  const MovieDetailsScreen({super.key, required this.movieId});
 
   @override
   Widget build(BuildContext context) {
-    final movieId = ModalRoute.of(context)!.settings.arguments as int;
-    print("MovieDetailsScreen received ID: $movieId");
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       appBar: AppBar(
-        actionsPadding:  EdgeInsets.symmetric(horizontal: 15),
+        actionsPadding: EdgeInsets.symmetric(horizontal: 15.w),
         backgroundColor: Colors.transparent,
-        leading:  Icon(Icons.arrow_back_ios, color: Colors.white, size: 35),
-        actions: [SvgPicture.asset("assets/svg/save.svg")],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 28.sp),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [SvgPicture.asset("assets/svg/save.svg", width: 24.w, height: 24.h)],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
+      body: FutureBuilder<Map<String, dynamic>?>(
+        future: ApiManager.getMovieDetails(movieId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: SizedBox(
+                width: 40.w,
+                height: 40.h,
+                child: CircularProgressIndicator(color: Colors.red),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Error: ${snapshot.error}",
+                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(
+              child: Text(
+                "No details found",
+                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+              ),
+            );
+          }
+
+          final movie = snapshot.data!;
+          final screenshots = [
+            movie["large_screenshot_image1"],
+            movie["large_screenshot_image2"],
+            movie["large_screenshot_image3"],
+          ].where((e) => e != null).toList();
+
+          final castList = (movie["cast"] ?? []) as List<dynamic>;
+          final genres = (movie["genres"] ?? []) as List<dynamic>;
+
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  "assets/images/doctorS.jpg",
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 500,
-                  color: ColorManager.primaryColor.withOpacity(0.5),
-                ),
-                Positioned(
-                  bottom: 240,
-                  left: 0,
-                  right: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      print("Play icon tapped!");
-                    },
-                    child: SvgPicture.asset(
-                      "assets/svg/buttonY.svg",
-                      width: 60,
-                      height: 60,
+                Stack(
+                  children: [
+                    Image.network(
+                      movie["background_image_original"] ??
+                          movie["large_cover_image"] ??
+                          "",
+                      width: double.infinity,
+                      height: 500.h,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          Container(height: 500.h, color: Colors.grey[800]),
                     ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 20,
-                  left: 0,
-                  right: 0,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding:  EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              "Movie ID: $movieId",
-                              textAlign: TextAlign.center,
-                              style:  TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
+                    Container(
+                      width: double.infinity,
+                      height: 500.h,
+                      color: ColorManager.primaryColor.withOpacity(0.5),
+                    ),
+                    Positioned(
+                      bottom: 240.h,
+                      left: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: SvgPicture.asset(
+                          "assets/svg/buttonY.svg",
+                          width: 60.w,
+                          height: 60.h,
                         ),
                       ),
-                      const SizedBox(height: 15),
+                    ),
+                    Positioned(
+                      bottom: 20.h,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        children: [
+                          Text(
+                            movie["title"] ?? "",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: 15.h),
+                          Text(
+                            "${movie["year"] ?? ""}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: ColorManager.darkGreyColor,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 16.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 15.h),
+                            backgroundColor: ColorManager.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.r),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Text(
+                            "Watch",
+                            style: TextStyle(
+                              color: ColorManager.white,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          RatingWidget(
+                            text: "${movie["like_count"] ?? 0}",
+                            picture: "assets/svg/love_icon.svg",
+                          ),
+                          RatingWidget(
+                            text: "${movie["runtime"] ?? 0} min",
+                            picture: "assets/svg/time_icon.svg",
+                          ),
+                          RatingWidget(
+                            text: "${movie["rating"] ?? 0.0}",
+                            picture: "assets/svg/star_icon.svg",
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16.h),
                       Text(
-                        "2022",
-                        textAlign: TextAlign.center,
+                        "Screen Shots",
                         style: TextStyle(
-                          color: ColorManager.darkGreyColor,
-                          fontSize: 20,
+                          color: ColorManager.white,
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
+                      SizedBox(height: 10.h),
+                      ListView.separated(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) =>
+                            ScreenShotWidget(pic: screenshots[index]),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 10.h),
+                        itemCount: screenshots.length,
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Summary",
+                        style: TextStyle(
+                          color: ColorManager.white,
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        movie["description_full"] ?? "",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Cast",
+                        style: TextStyle(
+                          color: ColorManager.white,
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      ListView.separated(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final cast = castList[index];
+                          return CastWidget(
+                            pic: cast["url_small_image"] ??
+                                "https://via.placeholder.com/150",
+                            name: cast["name"] ?? "",
+                            character: cast["character_name"] ?? "",
+                          );
+                        },
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 10.h),
+                        itemCount: castList.length,
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "Genres",
+                        style: TextStyle(
+                          color: ColorManager.white,
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 5.h),
+                      GridView.builder(
+                        itemCount: genres.length,
+                        padding: EdgeInsets.zero,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate:
+                        SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 3,
+                          mainAxisSpacing: 15.h,
+                          crossAxisSpacing: 15.w,
+                        ),
+                        itemBuilder: (context, index) =>
+                            GenresWidget(text: genres[index]),
+                      ),
+                      SizedBox(height: 40.h),
                     ],
                   ),
                 ),
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                   SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 15),
-                        backgroundColor: ColorManager.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        "Watch".tr(),
-                        style: TextStyle(
-                          color: ColorManager.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children:  [
-                      RatingWidget(text: "15", picture: "assets/svg/love_icon.svg"),
-                      SizedBox(width: 6),
-                      RatingWidget(text: "90", picture: "assets/svg/time_icon.svg"),
-                      SizedBox(width: 6),
-                      RatingWidget(text: "7.6", picture: "assets/svg/star_icon.svg"),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "Screen Shots",
-                    style: TextStyle(
-                      color: ColorManager.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ListView.separated(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) =>
-                     ScreenShotWidget(pic: "assets/images/screenshot1.png"),
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
-                    itemCount: 3,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "Similar",
-                    style: TextStyle(
-                      color: ColorManager.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Image.asset("assets/images/c.png"),
-                            const SizedBox(height: 10),
-                            Image.asset("assets/images/blackP.png"),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Image.asset("assets/images/end_game.png"),
-                            const SizedBox(height: 10),
-                            Image.asset("assets/images/war.png"),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Summary",
-                    style: TextStyle(
-                      color: ColorManager.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Following the events of Spider-Man No Way Home, Doctor Strange unwittingly casts a forbidden spell that accidentally opens up the multiverse...",
-                    style: TextStyle(
-                      color: ColorManager.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "Cast",
-                    style: TextStyle(
-                      color: ColorManager.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  ListView.separated(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) =>  CastWidget(
-                      pic: "assets/images/cast.png",
-                      name: "Mahmoud hany",
-                      character: "Bat man ",
-                    ),
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
-                    itemCount: 4,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "Genres",
-                    style: TextStyle(
-                      color: ColorManager.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  GridView.builder(
-                    itemCount: 5,
-                    padding: EdgeInsets.zero,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 3,
-                        mainAxisSpacing: 15,
-                        crossAxisSpacing: 15),
-                    itemBuilder: (context, index) =>
-                     GenresWidget(text: "action"),
-                  ),
-                  const SizedBox(height: 40),
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
