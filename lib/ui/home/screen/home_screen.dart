@@ -1,12 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
+import 'package:movies_app/core/resources/AssetsManager.dart';
 import 'package:movies_app/ui/home/taps/home_tab/HomeTab.dart';
 import 'package:movies_app/ui/home/taps/profile_tab/ProfileTab.dart';
 import 'package:movies_app/ui/home/taps/search_tab/SearchTab.dart';
 import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
-import '../../../core/resources/AssetsManager.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'home';
@@ -18,12 +17,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int NavigationBarSelectedIndex = 0;
 
-  List<Widget> tabs = [
-    HomeTab(),
-    SearchTab(),
-    SortTab(),
-    ProfileTab(),
-  ];
+  late List<Widget> tabs;
+
+  @override
+  void initState() {
+    super.initState();
+    tabs = [
+      HomeTab(
+        onSeeMoreTap: () {
+          setState(() {
+            NavigationBarSelectedIndex = 2;
+
+          });
+        },
+      ),
+      SearchTab(),
+      SortTab(),
+      ProfileTab(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
