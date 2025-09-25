@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SmallMovieCard extends StatelessWidget {
   final String imagePath;
@@ -13,12 +14,12 @@ class SmallMovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: EdgeInsets.all(8.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -27,33 +28,39 @@ class SmallMovieCard extends StatelessWidget {
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => Container(
                 color: Colors.grey.shade800,
-                child: const Icon(Icons.broken_image, color: Colors.white),
+                child: Icon(Icons.broken_image,
+                    color: Colors.white, size: 30.sp),
               ),
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
-                return const Center(
-                  child: CircularProgressIndicator(color: Colors.yellow),
+                return Center(
+                  child: SizedBox(
+                    width: 20.w,
+                    height: 20.w,
+                    child: const CircularProgressIndicator(
+                      color: Colors.yellow,
+                      strokeWidth: 2,
+                    ),
+                  ),
                 );
               },
             ),
-
             Positioned(
-              top: 6,
-              left: 6,
+              top: 6.h,
+              left: 6.w,
               child: Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.star, color: Colors.yellow, size: 14),
-                    const SizedBox(width: 3),
+                    Icon(Icons.star, color: Colors.yellow, size: 14.sp),
+                    SizedBox(width: 3.w),
                     Text(
                       rating.toString(),
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 12.sp),
                     ),
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/resources/AssetsManager.dart';
 import 'package:movies_app/core/reusable_components/SearchField.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
@@ -53,24 +54,31 @@ class _SearchTabState extends State<SearchTab> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.w),
               child: SearchField(
                 controller: controller,
                 onChanged: (value) => searchMovies(value),
               ),
             ),
             if (isLoading)
-              const Center(child: CircularProgressIndicator())
+              const Center(
+                child: CircularProgressIndicator(color: Colors.yellow),
+              )
             else if (movies.isEmpty)
-              Expanded(child: Image.asset(AssetsManager.empty))
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: Image.asset(AssetsManager.empty),
+                ),
+              )
             else
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  padding: EdgeInsets.all(8.w),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8.w,
+                    mainAxisSpacing: 8.h,
                     childAspectRatio: 0.65,
                   ),
                   itemCount: movies.length,
@@ -80,7 +88,6 @@ class _SearchTabState extends State<SearchTab> {
 
                     return GestureDetector(
                       onTap: () {
-                        print("SearchTab clicked movie ID: $movieId");
                         Navigator.pushNamed(
                           context,
                           MovieDetailsScreen.routeName,

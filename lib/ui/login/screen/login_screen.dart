@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_app/core/DialogUtils.dart';
 import 'package:movies_app/ui/home/screen/home_screen.dart';
@@ -23,11 +24,9 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  // Controllers
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   int selectedLanguage = 0;
 
   @override
@@ -51,7 +50,7 @@ class _LogInScreenState extends State<LogInScreen> {
           "login".tr(),
           style: TextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
+            fontSize: 16.sp,
             color: ColorManager.yellow,
           ),
         ),
@@ -60,19 +59,17 @@ class _LogInScreenState extends State<LogInScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.w),
           child: Form(
             key: formKey,
             child: Column(
               children: [
-                // Avatars
-        
-                Image.asset(AssetsManager.movieLogo),
-                const SizedBox(height: 69),
-        
-        
-        
-                // Email
+                Image.asset(
+                  AssetsManager.movieLogo,
+                  width: 120.w,
+                  height: 120.h,
+                ),
+                SizedBox(height: 69.h),
                 CustomField(
                   isPassword: false,
                   hint: 'email'.tr(),
@@ -89,9 +86,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   },
                   prefix: AssetsManager.email,
                 ),
-                const SizedBox(height: 24),
-        
-                // Password
+                SizedBox(height: 24.h),
                 CustomField(
                   isPassword: true,
                   hint: 'password'.tr(),
@@ -108,40 +103,34 @@ class _LogInScreenState extends State<LogInScreen> {
                   },
                   prefix: AssetsManager.password,
                 ),
-                const SizedBox(height: 33),
-        
-        
-        
-                // Log In Button
+                SizedBox(height: 33.h),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                         login();
+                        login();
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorManager.yellow,
-                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 50.w, vertical: 14.h),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                     ),
                     child: Text(
                       'login'.tr(),
                       style: TextStyle(
                         color: ColorManager.primaryColor,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-        
-                const SizedBox(height: 23),
-        
-                // have acc
+                SizedBox(height: 23.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -149,7 +138,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       "donotHaveAcc".tr(),
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
                     TextButton(
@@ -160,34 +149,35 @@ class _LogInScreenState extends State<LogInScreen> {
                         "createOne".tr(),
                         style: TextStyle(
                           color: Colors.yellow,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 23),
-        
-                // Divider
+                SizedBox(height: 23.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 90,
+                      width: 90.w,
                       child: Divider(
                         color: ColorManager.yellow,
                         thickness: 1,
                       ),
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 10.w),
                     Text(
                       'or'.tr(),
-                      style: TextStyle(color: ColorManager.yellow, fontSize: 14),
+                      style: TextStyle(
+                        color: ColorManager.yellow,
+                        fontSize: 14.sp,
+                      ),
                     ),
-                    SizedBox(width: 10),
-                    Container(
-                      width: 90,
+                    SizedBox(width: 10.w),
+                    SizedBox(
+                      width: 90.w,
                       child: Divider(
                         color: ColorManager.yellow,
                         thickness: 1,
@@ -195,22 +185,19 @@ class _LogInScreenState extends State<LogInScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 28),
-        
-                // login with google
-                // Google Login Button (UI only)
+                SizedBox(height: 28.h),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
-                      /// LOGIC HERE
                       Navigator.pushNamed(context, HomeScreen.routeName);
                     },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: ColorManager.yellow),
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 14.h),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       backgroundColor: ColorManager.yellow,
                     ),
@@ -219,15 +206,15 @@ class _LogInScreenState extends State<LogInScreen> {
                       children: [
                         SvgPicture.asset(
                           AssetsManager.google,
-                          height: 24,
-                          width: 24,
+                          height: 24.h,
+                          width: 24.w,
                         ),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10.w),
+                        Text(
                           "Login with Google",
                           style: TextStyle(
                             color: ColorManager.primaryColor,
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -235,10 +222,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     ),
                   ),
                 ),
-        
-                const SizedBox(height: 28),
-        
-                // Language Switch
+                SizedBox(height: 28.h),
                 CustomSwitch(
                   onChange: (value) {
                     setState(() {
@@ -251,8 +235,16 @@ class _LogInScreenState extends State<LogInScreen> {
                     }
                   },
                   icons: [
-                    SvgPicture.asset(AssetsManager.us, height: 30, width: 30),
-                    SvgPicture.asset(AssetsManager.eg, height: 30, width: 30),
+                    SvgPicture.asset(
+                      AssetsManager.us,
+                      height: 30.h,
+                      width: 30.w,
+                    ),
+                    SvgPicture.asset(
+                      AssetsManager.eg,
+                      height: 30.h,
+                      width: 30.w,
+                    ),
                   ],
                   current: selectedLanguage,
                 ),
@@ -267,17 +259,14 @@ class _LogInScreenState extends State<LogInScreen> {
   Future<void> login() async {
     try {
       DialogUtils.showLoadingDialog(context);
-
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
       Navigator.pop(context);
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-
       String message = "";
       if (e.code == 'user-not-found') {
         message = "noUserFound".tr();
@@ -288,7 +277,6 @@ class _LogInScreenState extends State<LogInScreen> {
       } else {
         message = "unknownError".tr();
       }
-
       DialogUtils.showMessage(
         context,
         message,

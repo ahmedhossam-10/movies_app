@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/remote/network/ApiManager.dart';
 
 class GenreMoviesScreen extends StatefulWidget {
@@ -24,16 +25,24 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF121312),
       appBar: AppBar(
-        title: Text("${widget.genre} Movies"),
+        title: Text(
+          "${widget.genre} Movies",
+          style: TextStyle(fontSize: 18.sp),
+        ),
         backgroundColor: Colors.black,
       ),
       body: FutureBuilder<List<dynamic>>(
         future: _moviesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: Colors.yellow));
+            return const Center(
+                child: CircularProgressIndicator(color: Colors.yellow));
           } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
+            return Center(
+                child: Text(
+                  "Error: ${snapshot.error}",
+                  style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                ));
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             final movies = snapshot.data!;
             return ListView.builder(
@@ -44,21 +53,25 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
                   leading: Image.network(
                     movie["medium_cover_image"],
                     fit: BoxFit.cover,
-                    width: 50,
+                    width: 50.w,
                   ),
                   title: Text(
                     movie["title"],
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontSize: 16.sp),
                   ),
                   subtitle: Text(
                     "Rating: ${movie["rating"]}",
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                   ),
                 );
               },
             );
           } else {
-            return const Center(child: Text("No movies found", style: TextStyle(color: Colors.white)));
+            return Center(
+                child: Text(
+                  "No movies found",
+                  style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                ));
           }
         },
       ),
