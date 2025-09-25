@@ -1,8 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/resources/AssetsManager.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
-import 'package:movies_app/ui/start/screen/start_screen.dart';
+import 'package:movies_app/ui/home/screen/home_screen.dart';
+import 'package:movies_app/ui/login/screen/login_screen.dart';
+import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
+
+import '../../onboarding/screen/screen/onboarding_page.dart';
 
 class SplashScreen extends StatelessWidget {
   static const String routeName = 'splash';
@@ -12,14 +19,22 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorManger.primaryColor,
+      backgroundColor: ColorManager.primaryColor,
       body: Center(
-        child: Image.asset(AssetsManager.movieLogo),
+        child: Image.asset(
+          AssetsManager.movieLogo,
+          width: 200.w,
+          height: 200.h,
+        ),
       ).animate(
-        onComplete: (controller){
-          Navigator.pushReplacementNamed(context,StartScreen.routeName);
-        }
-      ).scale(duration: Duration(seconds: 2)),
+        onComplete: (controller) {
+          if (FirebaseAuth.instance.currentUser == null) {
+            Navigator.pushReplacementNamed(context, OnBoardingPage.routeName);
+          } else {
+            Navigator.pushReplacementNamed(context, OnBoardingPage.routeName);
+          }
+        },
+      ).scale(duration: const Duration(seconds: 2)),
     );
   }
 }
