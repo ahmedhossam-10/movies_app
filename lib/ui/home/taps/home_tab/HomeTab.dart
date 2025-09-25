@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import '../../../../core/resources/AssetsManager.dart';
 import '../../../../core/remote/network/ApiManager.dart';
+import '../../../movie_details/screen/movie_details_screen.dart';
 import '../../widgets/big_movie_card.dart';
 import '../../widgets/small_movie_card.dart';
 
@@ -21,7 +22,6 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   int selectedIndex = 0;
 
-
   final List<String> topMovies = [
     AssetsManager.movie1,
     AssetsManager.movie2,
@@ -31,7 +31,6 @@ class _HomeTabState extends State<HomeTab> {
   final List<double> topRatings = [7.7, 8.0, 7.9];
 
   final Color backgroundColor = const Color(0xFF121312);
-
 
   final List<String> categories = [
     "Action",
@@ -46,7 +45,6 @@ class _HomeTabState extends State<HomeTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Stack(
             children: [
               Positioned.fill(
@@ -214,17 +212,31 @@ class _HomeTabState extends State<HomeTab> {
               final movie = movies[index] as Map<String, dynamic>;
 
               final String imageUrl =
-                  (movie["medium_cover_image"] as String?) ?? AssetsManager.movie1;
+                  (movie["medium_cover_image"] as String?) ??
+                      AssetsManager.movie1;
 
               final double rating = (movie["rating"] is num)
                   ? (movie["rating"] as num).toDouble()
                   : 0.0;
 
-              return AspectRatio(
-                aspectRatio: 3 / 4,
-                child: SmallMovieCard(
-                  imagePath: imageUrl,
-                  rating: rating,
+              final int movieId = movie["id"] ?? 0;
+
+              return GestureDetector(
+                onTap: () {
+                  print("Selected Movie ID: $movieId");
+                  Navigator.pushNamed(
+                    context,
+                    MovieDetailsScreen.routeName,
+                    arguments: movieId,
+
+                  );
+                },
+                child: AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: SmallMovieCard(
+                    imagePath: imageUrl,
+                    rating: rating,
+                  ),
                 ),
               );
             },

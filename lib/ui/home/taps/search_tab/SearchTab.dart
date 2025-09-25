@@ -4,6 +4,7 @@ import 'package:movies_app/core/reusable_components/SearchField.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import '../../../../core/remote/network/ApiManager.dart';
 import '../../../../core/reusable_components/MovieCard.dart';
+import '../../../movie_details/screen/movie_details_screen.dart';
 
 class SearchTab extends StatefulWidget {
   static const String routeName = 'search';
@@ -75,13 +76,24 @@ class _SearchTabState extends State<SearchTab> {
                   itemCount: movies.length,
                   itemBuilder: (context, index) {
                     final movie = movies[index];
-                    return MovieCard(
-                      imageUrl: movie["medium_cover_image"],
-                      rating: (movie["rating"] as num).toDouble(),
+                    final int movieId = movie["id"] ?? 0;
+
+                    return GestureDetector(
+                      onTap: () {
+                        print("SearchTab clicked movie ID: $movieId");
+                        Navigator.pushNamed(
+                          context,
+                          MovieDetailsScreen.routeName,
+                          arguments: movieId,
+                        );
+                      },
+                      child: MovieCard(
+                        imageUrl: movie["medium_cover_image"],
+                        rating: (movie["rating"] as num).toDouble(),
+                      ),
                     );
                   },
-                )
-
+                ),
               ),
           ],
         ),
