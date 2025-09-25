@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
 
 class ScreenShotWidget extends StatelessWidget {
-  String pic;
-   ScreenShotWidget({super.key,required this.pic});
+  final String pic;
+
+  const ScreenShotWidget({super.key, required this.pic});
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: Colors.transparent
+        color: Colors.transparent,
       ),
-      child: Image.asset(pic,fit: BoxFit.fill,height: 167,),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Image.network(
+          pic,
+          fit: BoxFit.fill,
+          height: 167,
+          errorBuilder: (context, error, stackTrace) =>
+              Icon(Icons.broken_image, size: 50),
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
+      ),
     );
   }
 }

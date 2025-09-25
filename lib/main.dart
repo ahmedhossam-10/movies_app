@@ -2,9 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_app/core/PrefsManager.dart';
 import 'package:movies_app/ui/home/screen/home_screen.dart';
-import 'package:movies_app/ui/home/taps/home_tab/HomeTab.dart';
-import 'package:movies_app/ui/home/taps/search_tab/SearchTab.dart';
-import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
 import 'package:movies_app/ui/login/screen/login_screen.dart';
 import 'package:movies_app/ui/movie_details/screen/movie_details_screen.dart';
 import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
@@ -49,7 +46,10 @@ class MyApp extends StatelessWidget {
         SplashScreen.routeName: (_) => SplashScreen(),
         SignUpScreen.routeName: (_) => SignUpScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
-        MovieDetailsScreen.routeName: (_) =>  MovieDetailsScreen(),
+        MovieDetailsScreen.routeName: (context) {
+          final movieId = ModalRoute.of(context)!.settings.arguments as int;
+          return MovieDetailsScreen(movieId: movieId);
+        },
       },
     );
   }
