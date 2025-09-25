@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import '../../../../core/remote/network/ApiManager.dart';
+import '../../../movie_details/screen/movie_details_screen.dart';
 
 class SortTab extends StatelessWidget {
   static const String routeName = 'sort';
@@ -18,40 +19,53 @@ class SortTab extends StatelessWidget {
     "Romance"
   ];
 
-  Widget buildMovieCard(Map<String, dynamic> movie) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.network(
-              movie["medium_cover_image"] ?? "",
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: Colors.grey,
-                child: const Icon(Icons.broken_image, color: Colors.white),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 8,
-            left: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                "⭐ ${movie["rating"] ?? "N/A"}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+  Widget buildMovieCard(BuildContext context, Map<String, dynamic> movie) {
+    final int movieId = movie["id"] ?? 0;
+
+    return GestureDetector(
+      onTap: () {
+        print("SortTab clicked movie ID: $movieId");
+        Navigator.pushNamed(
+          context,
+          MovieDetailsScreen.routeName,
+          arguments: movieId,
+        );
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.network(
+                movie["medium_cover_image"] ?? "",
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: Colors.grey,
+                  child: const Icon(Icons.broken_image, color: Colors.white),
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              top: 8,
+              left: 8,
+              child: Container(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  "⭐ ${movie["rating"] ?? "N/A"}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -137,7 +151,8 @@ class SortTab extends StatelessWidget {
                                 childAspectRatio: 0.65,
                               ),
                               itemBuilder: (context, index) {
-                                return buildMovieCard(movies[index]);
+                                return buildMovieCard(
+                                    context, movies[index]);
                               },
                             ),
                           );
