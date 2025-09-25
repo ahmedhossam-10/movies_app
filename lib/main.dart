@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
         SplashScreen.routeName: (_) => SplashScreen(),
         SignUpScreen.routeName: (_) => SignUpScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
-        MovieDetailsScreen.routeName:(_) => MovieDetailsScreen(),
+        MovieDetailsScreen.routeName: (_) => MovieDetailsScreen(),
       },
     );
   }
