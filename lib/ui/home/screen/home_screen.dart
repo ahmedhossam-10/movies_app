@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import 'package:movies_app/ui/home/taps/home_tab/HomeTab.dart';
-import 'package:movies_app/ui/home/taps/profile_tab/ProfileTab.dart';
+import 'package:movies_app/ui/home/taps/profile_tab/profile_screen/ProfileTab.dart';
 import 'package:movies_app/ui/home/taps/search_tab/SearchTab.dart';
 import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
 import '../../../core/resources/AssetsManager.dart';
