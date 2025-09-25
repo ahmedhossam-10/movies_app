@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import '../widgets/avatar_picker.dart';
 import '../widgets/custom_text_field.dart';
+import '../profile_screen/ProfileTab.dart';
 
 class EditProfileScreen extends StatefulWidget {
   static const String routeName = "/edit-profile";
@@ -21,7 +21,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController phoneController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  get _firestore => null;
+
+
+
+
 
   @override
   void initState() {
@@ -50,6 +55,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final user = _auth.currentUser;
       if (user != null) {
         try {
+          var _firestore;
           await _firestore.collection('users').doc(user.uid).update({
             'name': nameController.text.trim(),
             'phone': phoneController.text.trim(),
