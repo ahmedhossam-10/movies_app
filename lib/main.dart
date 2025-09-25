@@ -6,6 +6,7 @@ import 'package:movies_app/ui/home/taps/home_tab/HomeTab.dart';
 import 'package:movies_app/ui/home/taps/search_tab/SearchTab.dart';
 import 'package:movies_app/ui/home/taps/sort_tap/SortTab.dart';
 import 'package:movies_app/ui/login/screen/login_screen.dart';
+import 'package:movies_app/ui/movie_details/screen/movie_details_screen.dart';
 import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 import 'package:movies_app/ui/splash/screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,7 +33,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -63,11 +64,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashScreen.routeName: (_) => SplashScreen(),
         SignUpScreen.routeName: (_) => SignUpScreen(),
-        LogInScreen.routeName: (_) => LogInScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
-        HomeTab.routeName: (_) => HomeTab(),
-        SortTab.routeName: (_) => SortTab(),
-        SearchTab.routeName: (_) => SearchTab(),
       },
     );
   }
