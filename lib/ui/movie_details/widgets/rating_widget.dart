@@ -19,13 +19,13 @@ class RatingWidget extends StatelessWidget {
       child: Row(
         children: [
           SvgPicture.asset(picture),
-          SizedBox(width: 14,),
+          SizedBox(width: 12,),
           Text(
             text,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 18,
             ),
           ),
         ],
