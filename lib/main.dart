@@ -9,6 +9,9 @@ import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 import 'package:movies_app/ui/splash/screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:movies_app/ui/onboarding/screen/screen/onboarding_page.dart';
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,10 +50,12 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           ),
           debugShowCheckedModeBanner: false,
-          initialRoute: HomeScreen.routeName,
+          initialRoute: SplashScreen.routeName,
           routes: {
             SplashScreen.routeName: (_) => SplashScreen(),
+            OnBoardingPage.routeName: (_) => OnBoardingPage(),
             SignUpScreen.routeName: (_) => SignUpScreen(),
+            LogInScreen.routeName: (_) => LogInScreen(),
             HomeScreen.routeName: (_) => HomeScreen(),
             MovieDetailsScreen.routeName: (context) {
               final movieId = ModalRoute.of(context)!.settings.arguments as int;

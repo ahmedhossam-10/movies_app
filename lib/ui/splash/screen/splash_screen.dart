@@ -9,6 +9,8 @@ import 'package:movies_app/ui/home/screen/home_screen.dart';
 import 'package:movies_app/ui/login/screen/login_screen.dart';
 import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 
+import '../../onboarding/screen/screen/onboarding_page.dart';
+
 class SplashScreen extends StatelessWidget {
   static const String routeName = 'splash';
 
@@ -27,9 +29,9 @@ class SplashScreen extends StatelessWidget {
       ).animate(
         onComplete: (controller) {
           if (FirebaseAuth.instance.currentUser == null) {
-            Navigator.pushReplacementNamed(context, LogInScreen.routeName);
+            Navigator.pushReplacementNamed(context, OnBoardingPage.routeName);
           } else {
-            Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+            Navigator.pushReplacementNamed(context, OnBoardingPage.routeName);
           }
         },
       ).scale(duration: const Duration(seconds: 2)),

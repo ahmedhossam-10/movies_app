@@ -63,7 +63,7 @@ class OnboardingPageItem extends StatelessWidget {
                     onPressed: onStart,
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
-                      backgroundColor: ColorManger.yellow,
+                      backgroundColor: ColorManager.yellow,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),

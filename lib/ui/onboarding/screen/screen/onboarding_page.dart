@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 import 'package:movies_app/onboarding_process.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
-import 'package:movies_app/ui/signIn/screen/signIn_screen.dart';
+
+import '../../../login/screen/login_screen.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({super.key});
@@ -66,7 +66,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   void _completeOnboarding() async {
     await OnboardingProcess.completeOnboarding();
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, SignInScreen.routeName);
+    Navigator.pushReplacementNamed(context, LogInScreen.routeName);
   }
 
   @override
@@ -130,7 +130,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       child: ElevatedButton(
                         onPressed: _backPage,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorManger.yellow,
+                          backgroundColor: ColorManager.yellow,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)),
                           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -146,7 +146,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     child: ElevatedButton(
                       onPressed: _nextPage,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorManger.yellow,
+                        backgroundColor: ColorManager.yellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                         padding: const EdgeInsets.symmetric(vertical: 16),
