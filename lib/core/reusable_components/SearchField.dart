@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../resources/AssetsManager.dart';
 
@@ -35,37 +36,38 @@ class _SearchFieldState extends State<SearchField> {
     return TextField(
       controller: widget.controller,
       onChanged: widget.onChanged,
-      style: const TextStyle(
+      style: TextStyle(
         color: Colors.white,
-        fontSize: 16,
+        fontSize: 16.sp,
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
         hintText: widget.hint,
         hintStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
           color: Colors.white70,
+          fontSize: 16.sp,
         ),
         filled: true,
         fillColor: background,
         prefixIcon: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: SvgPicture.asset(
             AssetsManager.search_selected,
-            height: 24,
-            width: 24,
+            height: 24.h,
+            width: 24.w,
             colorFilter: const ColorFilter.mode(
               Colors.white,
               BlendMode.srcIn,
             ),
           ),
         ),
-        prefixIconConstraints: const BoxConstraints(
-          maxWidth: 60,
-          maxHeight: 60,
+        prefixIconConstraints: BoxConstraints(
+          maxWidth: 60.w,
+          maxHeight: 60.h,
         ),
         suffixIcon: widget.controller.text.isNotEmpty
             ? IconButton(
-          icon: const Icon(Icons.clear, color: Colors.white),
+          icon: Icon(Icons.clear, color: Colors.white, size: 20.sp),
           onPressed: () {
             widget.controller.clear();
             widget.onChanged?.call("");
@@ -74,12 +76,12 @@ class _SearchFieldState extends State<SearchField> {
         )
             : null,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: background!, width: 1),
+          borderRadius: BorderRadius.circular(16.r),
+          borderSide: BorderSide(color: background!, width: 1.w),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: background, width: 2),
+          borderRadius: BorderRadius.circular(16.r),
+          borderSide: BorderSide(color: background, width: 2.w),
         ),
       ),
     );

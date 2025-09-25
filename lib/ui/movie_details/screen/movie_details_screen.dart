@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
 import 'package:movies_app/ui/movie_details/widgets/cast_widget.dart';
 import 'package:movies_app/ui/movie_details/widgets/genres_widget.dart';
 import 'package:movies_app/ui/movie_details/widgets/rating_widget.dart';
 import 'package:movies_app/ui/movie_details/widgets/screen_shot_widget.dart';
-
 import '../../../core/remote/network/ApiManager.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
@@ -20,33 +20,37 @@ class MovieDetailsScreen extends StatelessWidget {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       appBar: AppBar(
-        actionsPadding: const EdgeInsets.symmetric(horizontal: 15),
+        actionsPadding: EdgeInsets.symmetric(horizontal: 15.w),
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 28),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 28.sp),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [SvgPicture.asset("assets/svg/save.svg")],
+        actions: [SvgPicture.asset("assets/svg/save.svg", width: 24.w, height: 24.h)],
       ),
       body: FutureBuilder<Map<String, dynamic>?>(
         future: ApiManager.getMovieDetails(movieId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.red),
+            return Center(
+              child: SizedBox(
+                width: 40.w,
+                height: 40.h,
+                child: CircularProgressIndicator(color: Colors.red),
+              ),
             );
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
                 "Error: ${snapshot.error}",
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 16.sp),
               ),
             );
           } else if (!snapshot.hasData || snapshot.data == null) {
-            return const Center(
+            return Center(
               child: Text(
                 "No details found",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 16.sp),
               ),
             );
           }
@@ -65,7 +69,6 @@ class MovieDetailsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ====== Poster + Overlay ======
                 Stack(
                   children: [
                     Image.network(
@@ -73,33 +76,31 @@ class MovieDetailsScreen extends StatelessWidget {
                           movie["large_cover_image"] ??
                           "",
                       width: double.infinity,
-                      height: 500,
+                      height: 500.h,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) =>
-                          Container(height: 500, color: Colors.grey[800]),
+                          Container(height: 500.h, color: Colors.grey[800]),
                     ),
                     Container(
                       width: double.infinity,
-                      height: 500,
+                      height: 500.h,
                       color: ColorManager.primaryColor.withOpacity(0.5),
                     ),
                     Positioned(
-                      bottom: 240,
+                      bottom: 240.h,
                       left: 0,
                       right: 0,
                       child: GestureDetector(
-                        onTap: () {
-                          // هنا ممكن تفتح Trailer باليوتيوب
-                        },
+                        onTap: () {},
                         child: SvgPicture.asset(
                           "assets/svg/buttonY.svg",
-                          width: 60,
-                          height: 60,
+                          width: 60.w,
+                          height: 60.h,
                         ),
                       ),
                     ),
                     Positioned(
-                      bottom: 20,
+                      bottom: 20.h,
                       left: 0,
                       right: 0,
                       child: Column(
@@ -107,19 +108,19 @@ class MovieDetailsScreen extends StatelessWidget {
                           Text(
                             movie["title"] ?? "",
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: 24.sp,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: 15.h),
                           Text(
                             "${movie["year"] ?? ""}",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: ColorManager.darkGreyColor,
-                              fontSize: 20,
+                              fontSize: 20.sp,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -128,24 +129,20 @@ class MovieDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
-                // ====== Details Section ======
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 16),
-
-                      // Watch button
+                      SizedBox(height: 16.h),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            padding: EdgeInsets.symmetric(vertical: 15.h),
                             backgroundColor: ColorManager.red,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(15.r),
                             ),
                           ),
                           onPressed: () {},
@@ -153,15 +150,13 @@ class MovieDetailsScreen extends StatelessWidget {
                             "Watch",
                             style: TextStyle(
                               color: ColorManager.white,
-                              fontSize: 20,
+                              fontSize: 20.sp,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
-
-                      // Ratings Row
+                      SizedBox(height: 16.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -179,57 +174,50 @@ class MovieDetailsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-
-                      // Screenshots
+                      SizedBox(height: 16.h),
                       Text(
                         "Screen Shots",
                         style: TextStyle(
                           color: ColorManager.white,
-                          fontSize: 24,
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       ListView.separated(
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => ScreenShotWidget(
-                          pic: screenshots[index],
-                        ),
+                        itemBuilder: (context, index) =>
+                            ScreenShotWidget(pic: screenshots[index]),
                         separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
+                            SizedBox(height: 10.h),
                         itemCount: screenshots.length,
                       ),
-                      const SizedBox(height: 16),
-
-                      // Summary
+                      SizedBox(height: 16.h),
                       Text(
                         "Summary",
                         style: TextStyle(
                           color: ColorManager.white,
-                          fontSize: 24,
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       Text(
                         movie["description_full"] ?? "",
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      const SizedBox(height: 16),
-
-                      // Cast
+                      SizedBox(height: 16.h),
                       Text(
                         "Cast",
                         style: TextStyle(
                           color: ColorManager.white,
-                          fontSize: 24,
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -247,37 +235,35 @@ class MovieDetailsScreen extends StatelessWidget {
                           );
                         },
                         separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
+                            SizedBox(height: 10.h),
                         itemCount: castList.length,
                       ),
-                      const SizedBox(height: 16),
-
-                      // Genres
+                      SizedBox(height: 16.h),
                       Text(
                         "Genres",
                         style: TextStyle(
                           color: ColorManager.white,
-                          fontSize: 24,
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      SizedBox(height: 5.h),
                       GridView.builder(
                         itemCount: genres.length,
                         padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                        SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           childAspectRatio: 3,
-                          mainAxisSpacing: 15,
-                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15.h,
+                          crossAxisSpacing: 15.w,
                         ),
                         itemBuilder: (context, index) =>
                             GenresWidget(text: genres[index]),
                       ),
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40.h),
                     ],
                   ),
                 ),
