@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_app/core/DialogUtils.dart';
 import 'package:movies_app/ui/home/screen/home_screen.dart';
-import 'package:movies_app/ui/login/screen/login_screen.dart';
+import 'package:movies_app/ui/signUp/screen/signUp_screen.dart';
 
 import '../../../core/resources/AssetsManager.dart';
 import '../../../core/resources/ColorManager.dart';
@@ -13,33 +13,27 @@ import '../../../core/resources/StringsManager.dart';
 import '../../../core/reusable_components/CustomField.dart';
 import '../../../core/reusable_components/CustomSwitch.dart';
 
-class SignUpScreen extends StatefulWidget {
-  static const String routeName = 'signUp';
+class LogInScreen extends StatefulWidget {
+  static const String routeName = 'logIn';
 
-  const SignUpScreen({super.key});
+  const LogInScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<LogInScreen> createState() => _LogInScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _LogInScreenState extends State<LogInScreen> {
   // Controllers
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   int selectedLanguage = 0;
 
   @override
   void dispose() {
-    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    confirmPasswordController.dispose();
-    phoneController.dispose();
     super.dispose();
   }
 
@@ -52,8 +46,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       backgroundColor: ColorManager.primaryColor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(
-          "register".tr(),
+          "login".tr(),
           style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 16,
@@ -63,60 +58,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
         centerTitle: true,
         backgroundColor: ColorManager.primaryColor,
       ),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: formKey,
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: formKey,
             child: Column(
               children: [
                 // Avatars
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(AssetsManager.avatar1),
-                    ),
-                    const SizedBox(width: 16),
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage(AssetsManager.avatar2),
-                    ),
-                    const SizedBox(width: 16),
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(AssetsManager.avatar3),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'avatar'.tr(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: ColorManager.white,
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Name
-                CustomField(
-                  isPassword: false,
-                  hint: 'name'.tr(),
-                  keyboard: TextInputType.name,
-                  controller: nameController,
-                  validation: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "nameReq".tr();
-                    }
-                    return null;
-                  },
-                  prefix: AssetsManager.name,
-                ),
-                const SizedBox(height: 24),
-
+        
+                Image.asset(AssetsManager.movieLogo),
+                const SizedBox(height: 69),
+        
+        
+        
                 // Email
                 CustomField(
                   isPassword: false,
@@ -135,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   prefix: AssetsManager.email,
                 ),
                 const SizedBox(height: 24),
-
+        
                 // Password
                 CustomField(
                   isPassword: true,
@@ -153,66 +108,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   prefix: AssetsManager.password,
                 ),
-                const SizedBox(height: 24),
-
-                // Confirm Password
-                CustomField(
-                  isPassword: true,
-                  hint: 'confirmPassword'.tr(),
-                  keyboard: TextInputType.visiblePassword,
-                  controller: confirmPasswordController,
-                  validation: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "confirmReq".tr();
-                    }
-                    if (value != passwordController.text) {
-                      return "passNotMatch".tr();
-                    }
-                    return null;
-                  },
-                  prefix: AssetsManager.password,
-                ),
-                const SizedBox(height: 24),
-
-                // Phone Number
-                CustomField(
-                  isPassword: false,
-                  hint: 'phone'.tr(),
-                  keyboard: TextInputType.phone,
-                  controller: phoneController,
-                  validation: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "phoneReq".tr();
-                    }
-                    if (!RegExp(r'^[0-9]{11}$').hasMatch(value)) {
-                      return "phoneInvalid".tr();
-                    }
-                    return null;
-                  },
-                  prefix: AssetsManager.phone,
-                ),
-
-                const SizedBox(height: 32),
-
-                // Sign Up Button
+                const SizedBox(height: 33),
+        
+        
+        
+                // Log In Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        await createAccount();
+                         login();
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorManager.yellow,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     child: Text(
-                      'createAcc'.tr(),
+                      'login'.tr(),
                       style: TextStyle(
                         color: ColorManager.primaryColor,
                         fontSize: 16,
@@ -221,14 +138,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 17),
-
+        
+                const SizedBox(height: 23),
+        
                 // have acc
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "haveAcc".tr(),
+                      "donotHaveAcc".tr(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -236,10 +154,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, LogInScreen.routeName);
+                        Navigator.pushNamed(context, SignUpScreen.routeName);
                       },
                       child: Text(
-                        "login".tr(),
+                        "createOne".tr(),
                         style: TextStyle(
                           color: Colors.yellow,
                           fontSize: 14,
@@ -249,10 +167,78 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ],
                 ),
-
-                const SizedBox(height: 24),
-
-                /// Language Switch
+                const SizedBox(height: 23),
+        
+                // Divider
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 90,
+                      child: Divider(
+                        color: ColorManager.yellow,
+                        thickness: 1,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'or'.tr(),
+                      style: TextStyle(color: ColorManager.yellow, fontSize: 14),
+                    ),
+                    SizedBox(width: 10),
+                    Container(
+                      width: 90,
+                      child: Divider(
+                        color: ColorManager.yellow,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 28),
+        
+                // login with google
+                // Google Login Button (UI only)
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      /// LOGIC HERE
+                      Navigator.pushNamed(context, HomeScreen.routeName);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: ColorManager.yellow),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      backgroundColor: ColorManager.yellow,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          AssetsManager.google,
+                          height: 24,
+                          width: 24,
+                        ),
+                        const SizedBox(width: 10),
+                        const Text(
+                          "Login with Google",
+                          style: TextStyle(
+                            color: ColorManager.primaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+        
+                const SizedBox(height: 28),
+        
+                // Language Switch
                 CustomSwitch(
                   onChange: (value) {
                     setState(() {
@@ -278,24 +264,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Future<void> createAccount() async {
+  Future<void> login() async {
     try {
       DialogUtils.showLoadingDialog(context);
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
-      Navigator.pop(context); // close loading
-      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false,);
+      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 
       String message = "";
-      if (e.code == 'weak-password') {
-        message = "weakPassword".tr();
-      } else if (e.code == 'email-already-in-use') {
-        message = "emailInUse".tr();
+      if (e.code == 'user-not-found') {
+        message = "noUserFound".tr();
+      } else if (e.code == 'wrong-password') {
+        message = "wrongPassword".tr();
       } else if (e.code == 'invalid-email') {
         message = "invalidEmail".tr();
       } else {

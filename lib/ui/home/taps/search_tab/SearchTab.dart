@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/core/resources/AssetsManager.dart';
 import 'package:movies_app/core/reusable_components/SearchField.dart';
 import 'package:movies_app/core/resources/ColorManager.dart';
-
 import '../../../../core/remote/network/ApiManager.dart';
+import '../../../../core/reusable_components/MovieCard.dart';
 
 class SearchTab extends StatefulWidget {
+  static const String routeName = 'search';
   const SearchTab({super.key});
 
   @override
@@ -63,23 +64,24 @@ class _SearchTabState extends State<SearchTab> {
               Expanded(child: Image.asset(AssetsManager.empty))
             else
               Expanded(
-                child: ListView.builder(
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(8.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    childAspectRatio: 0.65,
+                  ),
                   itemCount: movies.length,
                   itemBuilder: (context, index) {
                     final movie = movies[index];
-                    return ListTile(
-                      leading: Image.network(movie["medium_cover_image"]),
-                      title: Text(
-                        movie["title"],
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      subtitle: Text(
-                        "Rating: ${movie["rating"]}",
-                        style: const TextStyle(color: Colors.white70),
-                      ),
+                    return MovieCard(
+                      imageUrl: movie["medium_cover_image"],
+                      rating: (movie["rating"] as num).toDouble(),
                     );
                   },
-                ),
+                )
+
               ),
           ],
         ),

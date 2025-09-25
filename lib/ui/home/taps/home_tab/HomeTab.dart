@@ -1,11 +1,18 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:movies_app/core/resources/ColorManager.dart';
 import '../../../../core/resources/AssetsManager.dart';
+import '../../../../core/remote/network/ApiManager.dart';
 import '../../widgets/big_movie_card.dart';
 import '../../widgets/small_movie_card.dart';
 
 class HomeTab extends StatefulWidget {
-  static const String routeName = 'home';
+  final VoidCallback? onSeeMoreTap;
+
+  const HomeTab({super.key, this.onSeeMoreTap});
+
+  static const String routeName = 'homeTab';
 
   @override
   State<HomeTab> createState() => _HomeTabState();
@@ -14,146 +21,215 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   int selectedIndex = 0;
 
-  final List<String> movies = [
+
+  final List<String> topMovies = [
     AssetsManager.movie1,
     AssetsManager.movie2,
     AssetsManager.movie3,
   ];
 
-  final List<double> ratings = [7.7, 8.0, 7.9];
+  final List<double> topRatings = [7.7, 8.0, 7.9];
 
-  final PageController _pageController = PageController(viewportFraction: 0.75);
+  final Color backgroundColor = const Color(0xFF121312);
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+
+  final List<String> categories = [
+    "Action",
+    "Adventure",
+    "Animation",
+    "Biography",
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
 
-            /// الجزء الأول (خلفية + blur + الكروت)
-            SizedBox(
-              height: 500, // ارتفاع الجزء الأول
-              child: Stack(
-                children: [
-                  /// الخلفية
-                  Positioned.fill(
-                    child: Image.asset(
-                      movies[selectedIndex],
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-
-                  /// blur تحت الكروت
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    height: 200,
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                      child: Container(
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ),
-
-                  /// الكروت + Available Now
-                  Column(
-                    children: [
-                      SizedBox(height: 15,),
-                      Image.asset(
-                        AssetsManager.Available_Now,
-                        width: double.infinity,
-                        fit: BoxFit.contain,
-                      ),
-                      SizedBox(
-                        height: 260,
-                        child: PageView.builder(
-                          itemCount: movies.length,
-                          controller: _pageController,
-                          onPageChanged: (index) {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          itemBuilder: (context, index) {
-                            double scale =
-                            selectedIndex == index ? 1.0 : 0.85;
-
-                            return TweenAnimationBuilder(
-                              tween: Tween<double>(
-                                  begin: scale, end: scale),
-                              duration:
-                              const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                              builder: (context, value, child) {
-                                return Transform.scale(
-                                  scale: value,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    child: BigMovieCard(
-                                      imagePath: movies[index],
-                                      rating: ratings[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+          Stack(
+            children: [
+              Positioned.fill(
+                child: Image.asset(
+                  topMovies[selectedIndex],
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-
-            /// الجزء اللي بعد البلور (خلفية سودا)
-            Container(
-              width: double.infinity,
-              color: Colors.black,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-
-                  /// Watch Now
-                  Image.asset(
-                    AssetsManager.Watch_Now,
-                    width: double.infinity,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(
-                    height: 180,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie2, rating: 8.0),
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie3, rating: 7.9),
-                        SmallMovieCard(
-                            imagePath: AssetsManager.movie1, rating: 7.7),
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        backgroundColor.withOpacity(0.3),
+                        backgroundColor.withOpacity(0.6),
+                        backgroundColor.withOpacity(0.9),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                ),
+              ),
+              Column(
+                children: [
+                  const SizedBox(height: 80),
+                  Image.asset(
+                    AssetsManager.Available_Now,
+                    width: double.infinity,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 12),
+                  CarouselSlider(
+                    items: topMovies.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      String movie = entry.value;
+
+                      return AspectRatio(
+                        aspectRatio: 4 / 5,
+                        child: BigMovieCard(
+                          imagePath: movie,
+                          rating: topRatings[index % topRatings.length],
+                        ),
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      height: 300,
+                      viewportFraction: 0.55,
+                      enlargeCenterPage: true,
+                      enableInfiniteScroll: true,
+                      autoPlay: false,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               ),
+            ],
+          ),
+
+          Container(
+            width: double.infinity,
+            color: backgroundColor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                Image.asset(
+                  AssetsManager.Watch_Now,
+                  width: double.infinity,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 12),
+
+                ...categories.map((genre) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildCategoryRow(context, genre.tr(),
+                          onTap: widget.onSeeMoreTap),
+                      buildMovieListFromApi(genre),
+                    ],
+                  );
+                }).toList(),
+
+                const SizedBox(height: 24),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCategoryRow(BuildContext context, String title,
+      {VoidCallback? onTap}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          TextButton(
+            onPressed: onTap ?? () {},
+            child: Text(
+              "See More".tr(),
+              style: TextStyle(
+                color: ColorManager.yellow,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildMovieListFromApi(String genre) {
+    final String apiGenre = genre.toLowerCase();
+
+    return SizedBox(
+      height: 220,
+      child: FutureBuilder<List<dynamic>>(
+        future: ApiManager.getMoviesByGenreAndLimit(apiGenre),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.yellow),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Error loading $genre movies",
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text(
+                "No movies found",
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          }
+
+          final movies = snapshot.data!;
+
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            scrollDirection: Axis.horizontal,
+            itemCount: movies.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final movie = movies[index] as Map<String, dynamic>;
+
+              final String imageUrl =
+                  (movie["medium_cover_image"] as String?) ?? AssetsManager.movie1;
+
+              final double rating = (movie["rating"] is num)
+                  ? (movie["rating"] as num).toDouble()
+                  : 0.0;
+
+              return AspectRatio(
+                aspectRatio: 3 / 4,
+                child: SmallMovieCard(
+                  imagePath: imageUrl,
+                  rating: rating,
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
